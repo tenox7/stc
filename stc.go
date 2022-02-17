@@ -62,6 +62,16 @@ type dbCompletion struct {
 	Completion float64 `json:"completion"`
 }
 
+type Connections map[string]struct {
+	Connected     bool   `json:"connected"`
+	InBytesTotal  uint64 `json:"inBytesTotal"`
+	OutBytesTotal uint64 `json:"outBytesTotal"`
+}
+
+type sysConnections struct {
+	Connections Connections
+}
+
 func config() (stConfig, error) {
 	r, err := c.R().SetHeader("X-API-Key", *apiKey).Get(*target + "/rest/config")
 	if err != nil {
@@ -107,23 +117,19 @@ func completion(d string) (dbCompletion, error) {
 	return dbc, nil
 }
 
-func connection() (map[string]bool, error) {
+func connection() (Connections, error) {
 	r, err := c.R().SetHeader("X-API-Key", *apiKey).Get(*target + "/rest/system/connections")
 	if err != nil {
 		return nil, err
 	}
 
-	var ci map[string]interface{}
-	err = json.Unmarshal(r.Body(), &ci)
+	co := sysConnections{}
+	err = json.Unmarshal(r.Body(), &co)
 	if err != nil {
 		return nil, err
 	}
-	ccon := make(map[string]bool)
-	for i, j := range ci["connections"].(map[string]interface{}) {
-		//fmt.Printf(">> %v = %v\n", i, j.(map[string]interface{})["connected"])
-		ccon[i] = j.(map[string]interface{})["connected"].(bool)
-	}
-	return ccon, nil
+
+	return co.Connections, nil
 }
 
 func status() error {
@@ -155,7 +161,7 @@ func status() error {
 	if err != nil {
 		return err
 	}
-	fmt.Fprintf(t, "\nDevice\tPaused\tConnected\tCompletion\n")
+	fmt.Fprintf(t, "\nDevice\tPaused\tConnected\tCompletion\tDownload\tUpload\n")
 
 	for _, d := range cfg.Devices {
 		st, err := completion(d.DeviceID)
@@ -163,11 +169,13 @@ func status() error {
 			return err
 		}
 
-		fmt.Fprintf(t, "%v\t%v\t%v\t%5.1f%%\n",
+		fmt.Fprintf(t, "%v\t%v\t%v\t%5.1f%%\t%v\t%v\n",
 			d.Name,
 			d.Paused,
-			cons[d.DeviceID],
+			cons[d.DeviceID].Connected,
 			st.Completion,
+			humanize.Bytes(cons[d.DeviceID].InBytesTotal),
+			humanize.Bytes(cons[d.DeviceID].OutBytesTotal),
 		)
 	}
 
