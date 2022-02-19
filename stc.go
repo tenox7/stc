@@ -70,7 +70,7 @@ func dash() error {
 		return err
 	}
 
-	t := tabwriter.NewWriter(os.Stdout, 10, 0, 2, ' ', tabwriter.TabIndent)
+	t := tabwriter.NewWriter(os.Stdout, 9, 0, 2, ' ', tabwriter.TabIndent)
 
 	fmt.Fprintf(t, "Host\tUptime\tCPU%%\tVersion\n")
 	fmt.Fprintf(t, "%v\t%v\t%.1f%%\t%v\n",
@@ -98,7 +98,7 @@ func dash() error {
 
 	t.Flush()
 
-	fmt.Fprintf(t, "\nDevice\tPaused\tConnected\tComplete\tDownload\tUpload\n")
+	fmt.Fprintf(t, "\nDevice\tPaused\tConn\tSync%%\tDownload\tUpload\n")
 
 	for _, d := range cfg.Devices {
 		co, err := getCompletion(d.DeviceID)
