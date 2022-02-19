@@ -15,14 +15,20 @@ type stConfig struct {
 		Paused   bool   `json:"paused"`
 	}
 }
-type stConnections map[string]struct {
+type sysConn map[string]struct {
 	Connected     bool   `json:"connected"`
 	InBytesTotal  uint64 `json:"inBytesTotal"`
 	OutBytesTotal uint64 `json:"outBytesTotal"`
 }
 
 type sysConnections struct {
-	Connections stConnections
+	Connections sysConn
+}
+
+type sysStatus struct {
+	CpuPercent float64 `json:"cpuPercent"`
+	MyID       string  `json:"myID"`
+	Uptime     int64   `json:"uptime"`
 }
 
 type dbStatus struct {
@@ -35,12 +41,6 @@ type dbStatus struct {
 
 type dbCompletion struct {
 	Completion float64 `json:"completion"`
-}
-
-type sysStatus struct {
-	CpuPercent float64 `json:"cpuPercent"`
-	MyID       string  `json:"myID"`
-	Uptime     int64   `json:"uptime"`
 }
 
 func getConfig() (stConfig, error) {
@@ -88,7 +88,7 @@ func getCompletion(d string) (dbCompletion, error) {
 	return dbc, nil
 }
 
-func getConnection() (stConnections, error) {
+func getConnection() (sysConn, error) {
 	r, err := c.R().SetHeader("X-API-Key", *apiKey).Get(*target + "/rest/system/connections")
 	if err != nil {
 		return nil, err
