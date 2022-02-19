@@ -28,7 +28,6 @@ import (
 	humanize "github.com/dustin/go-humanize"
 	"github.com/go-resty/resty/v2"
 	"github.com/hako/durafmt"
-	_ "github.com/hako/durafmt"
 )
 
 var (
@@ -49,6 +48,11 @@ func dash() error {
 		return err
 	}
 
+	sv, err := getSysVersion()
+	if err != nil {
+		return err
+	}
+
 	myName := ""
 	for _, n := range cfg.Devices {
 		if n.DeviceID != st.MyID {
@@ -62,8 +66,13 @@ func dash() error {
 
 	t := tabwriter.NewWriter(os.Stdout, 10, 0, 2, ' ', tabwriter.TabIndent)
 
-	fmt.Fprintf(t, "Host\tUptime\tCPU%%\n")
-	fmt.Fprintf(t, "%v\t%v\t%.1f%%\n", myName, durafmt.ParseShort(time.Duration(st.Uptime*1000000000)), st.CpuPercent)
+	fmt.Fprintf(t, "Host\tUptime\tCPU%%\tVersion\n")
+	fmt.Fprintf(t, "%v\t%v\t%.1f%%\t%v\n",
+		myName,
+		durafmt.ParseShort(time.Duration(st.Uptime*1000000000)),
+		st.CpuPercent,
+		sv.Version,
+	)
 
 	fmt.Fprintf(t, "\nFolder\tPaused\tState\tGlobal\tLocal\n")
 

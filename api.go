@@ -31,6 +31,10 @@ type sysStatus struct {
 	Uptime     int64   `json:"uptime"`
 }
 
+type sysVersion struct {
+	Version string `json:"version"`
+}
+
 type dbStatus struct {
 	GlobalBytes uint64 `json:"globalBytes"`
 	GlobalFiles uint64 `json:"globalFiles"`
@@ -116,4 +120,19 @@ func getSysStatus() (sysStatus, error) {
 	}
 
 	return st, nil
+}
+
+func getSysVersion() (sysVersion, error) {
+	r, err := c.R().SetHeader("X-API-Key", *apiKey).Get(*target + "/rest/system/version")
+	if err != nil {
+		return sysVersion{}, err
+	}
+
+	ve := sysVersion{}
+	err = json.Unmarshal(r.Body(), &ve)
+	if err != nil {
+		return sysVersion{}, err
+	}
+
+	return ve, nil
 }
