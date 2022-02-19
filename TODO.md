@@ -1,7 +1,7 @@
 # STC Roadmap
 
-* Get API Key from env var
 * Find api key in config.xml
 * Device throughput
 * More stats
+* go term colors, etc
 * API POST functions

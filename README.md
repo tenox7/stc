@@ -8,17 +8,16 @@ forwarding or if you have large number of machines to query.
 ## Usage
 
 The tool by default connects to `http://127.0.0.1:8384` however you can target
-different machines by using `--target=` flag.
+different machines by using `--target` flag.
 
-You have to specify API Key by using `--api_key=` flag. The API Key can
-be obtained from the GUI or `config.xml` (`grep apikey config.xml`).
-
-In the current version stc will display folder and device status information.
+You must specify API Key by using etiher `--apikey` flag or `APIKEY` environment
+variable. The API Key can be obtained from the Syncthing Web UI or `config.xml`
+(`grep apikey config.xml`).
 
 ## Flags
 
 ```text
-  --api_key   - Syncthing api key
+  --apikey    - Syncthing API Key
   --target    - URL of the Syncthing target
 ```
 

@@ -20,6 +20,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -31,7 +32,7 @@ import (
 )
 
 var (
-	apiKey = flag.String("api_key", "", "Syncthing API Key") // TODO: also check env var
+	apiKey = flag.String("apikey", "", "Syncthing API Key") // TODO: also check env var
 	target = flag.String("target", "http://127.0.0.1:8384", "Syncthing Target")
 
 	c = resty.New()
@@ -122,9 +123,15 @@ func dash() error {
 func main() {
 	flag.Parse()
 
+	if *apiKey == "" {
+		*apiKey = os.Getenv("APIKEY")
+	}
+	if *apiKey == "" {
+		log.Fatal(fmt.Errorf("apikey must be specified as a flag or variable"))
+	}
+
 	err := dash()
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 }
