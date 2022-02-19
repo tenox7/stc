@@ -65,6 +65,11 @@ func dash() error {
 		return fmt.Errorf("unable to find this device name")
 	}
 
+	cons, err := getConnection()
+	if err != nil {
+		return err
+	}
+
 	t := tabwriter.NewWriter(os.Stdout, 10, 0, 2, ' ', tabwriter.TabIndent)
 
 	fmt.Fprintf(t, "Host\tUptime\tCPU%%\tVersion\n")
@@ -93,10 +98,6 @@ func dash() error {
 
 	t.Flush()
 
-	cons, err := getConnection()
-	if err != nil {
-		return err
-	}
 	fmt.Fprintf(t, "\nDevice\tPaused\tConnected\tComplete\tDownload\tUpload\n")
 
 	for _, d := range cfg.Devices {
