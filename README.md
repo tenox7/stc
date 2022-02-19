@@ -39,6 +39,10 @@ variable. The API Key can be obtained from the Syncthing Web UI or `config.xml`
   --target    - URL of the Syncthing target
 ```
 
+## Download binaries
+
+See [Releases](https://github.com/tenox7/stc/releases)
+
 ## Legal
 
 * Copyright 2022 Google LLC
