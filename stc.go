@@ -96,7 +96,7 @@ func dash() error {
 	if err != nil {
 		return err
 	}
-	fmt.Fprintf(t, "\nDevice\tPaused\tConnected\tCompletion\tDownload\tUpload\n")
+	fmt.Fprintf(t, "\nDevice\tPaused\tConnected\tComplete\tDownload\tUpload\n")
 
 	for _, d := range cfg.Devices {
 		co, err := getCompletion(d.DeviceID)
