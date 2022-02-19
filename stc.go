@@ -21,11 +21,14 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"time"
 
 	"text/tabwriter"
 
 	humanize "github.com/dustin/go-humanize"
 	"github.com/go-resty/resty/v2"
+	"github.com/hako/durafmt"
+	_ "github.com/hako/durafmt"
 )
 
 var (
@@ -41,20 +44,40 @@ func dash() error {
 		return err
 	}
 
+	st, err := getSysStatus()
+	if err != nil {
+		return err
+	}
+
+	myName := ""
+	for _, n := range cfg.Devices {
+		if n.DeviceID != st.MyID {
+			continue
+		}
+		myName = n.Name
+	}
+	if myName == "" {
+		return fmt.Errorf("unable to find this device name")
+	}
+
 	t := tabwriter.NewWriter(os.Stdout, 10, 0, 2, ' ', tabwriter.TabIndent)
-	fmt.Fprintf(t, "Folder\tPaused\tState\tGlobal\tLocal\n")
+
+	fmt.Fprintf(t, "Host\tUptime\tCPU%%\n")
+	fmt.Fprintf(t, "%v\t%v\t%.1f%%\n", myName, durafmt.ParseShort(time.Duration(st.Uptime*1000000000)), st.CpuPercent)
+
+	fmt.Fprintf(t, "\nFolder\tPaused\tState\tGlobal\tLocal\n")
 
 	for _, f := range cfg.Folders {
-		st, err := getFolderStatus(f.ID)
+		fs, err := getFolderStatus(f.ID)
 		if err != nil {
 			return err
 		}
 		fmt.Fprintf(t, "%v\t%v\t%v\t%v\t%v\n",
 			f.Label,
 			f.Paused,
-			st.State,
-			humanize.Bytes(st.GlobalBytes),
-			humanize.Bytes(st.LocalBytes),
+			fs.State,
+			humanize.Bytes(fs.GlobalBytes),
+			humanize.Bytes(fs.LocalBytes),
 		)
 	}
 
@@ -67,7 +90,7 @@ func dash() error {
 	fmt.Fprintf(t, "\nDevice\tPaused\tConnected\tCompletion\tDownload\tUpload\n")
 
 	for _, d := range cfg.Devices {
-		st, err := getCompletion(d.DeviceID)
+		co, err := getCompletion(d.DeviceID)
 		if err != nil {
 			return err
 		}
@@ -76,7 +99,7 @@ func dash() error {
 			d.Name,
 			d.Paused,
 			cons[d.DeviceID].Connected,
-			st.Completion,
+			co.Completion,
 			humanize.Bytes(cons[d.DeviceID].InBytesTotal),
 			humanize.Bytes(cons[d.DeviceID].OutBytesTotal),
 		)

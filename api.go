@@ -37,6 +37,12 @@ type dbCompletion struct {
 	Completion float64 `json:"completion"`
 }
 
+type sysStatus struct {
+	CpuPercent float64 `json:"cpuPercent"`
+	MyID       string  `json:"myID"`
+	Uptime     int64   `json:"uptime"`
+}
+
 func getConfig() (stConfig, error) {
 	r, err := c.R().SetHeader("X-API-Key", *apiKey).Get(*target + "/rest/config")
 	if err != nil {
@@ -95,4 +101,19 @@ func getConnection() (stConnections, error) {
 	}
 
 	return co.Connections, nil
+}
+
+func getSysStatus() (sysStatus, error) {
+	r, err := c.R().SetHeader("X-API-Key", *apiKey).Get(*target + "/rest/system/status")
+	if err != nil {
+		return sysStatus{}, err
+	}
+
+	st := sysStatus{}
+	err = json.Unmarshal(r.Body(), &st)
+	if err != nil {
+		return sysStatus{}, err
+	}
+
+	return st, nil
 }
