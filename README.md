@@ -17,7 +17,7 @@ backups    false     idle      86 GB     86 GB
 
 Device          Paused    Connected  Complete  Download  Upload
 office          false     true       100.0%    11 kB     11 kB
-garage          false     false      100.0%    0 B       0 B
+laptop          false     false      100.0%    0 B       0 B
 jakob-home      false     true       100.0%    89 MB     447 kB
 backupnas       false     true       100.0%    6.3 kB    7.0 kB
 homenas         false     true       100.0%    0 B       0 B
