@@ -36,7 +36,7 @@ var (
 )
 
 func dash() error {
-	cfg, err := config()
+	cfg, err := getConfig()
 	if err != nil {
 		return err
 	}
@@ -45,7 +45,7 @@ func dash() error {
 	fmt.Fprintf(t, "Folder\tPaused\tState\tGlobal\tLocal\n")
 
 	for _, f := range cfg.Folders {
-		st, err := folderStatus(f.ID)
+		st, err := getFolderStatus(f.ID)
 		if err != nil {
 			return err
 		}
@@ -60,14 +60,14 @@ func dash() error {
 
 	t.Flush()
 
-	cons, err := connection()
+	cons, err := getConnection()
 	if err != nil {
 		return err
 	}
 	fmt.Fprintf(t, "\nDevice\tPaused\tConnected\tCompletion\tDownload\tUpload\n")
 
 	for _, d := range cfg.Devices {
-		st, err := completion(d.DeviceID)
+		st, err := getCompletion(d.DeviceID)
 		if err != nil {
 			return err
 		}

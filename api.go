@@ -37,7 +37,7 @@ type dbCompletion struct {
 	Completion float64 `json:"completion"`
 }
 
-func config() (stConfig, error) {
+func getConfig() (stConfig, error) {
 	r, err := c.R().SetHeader("X-API-Key", *apiKey).Get(*target + "/rest/config")
 	if err != nil {
 		return stConfig{}, err
@@ -52,7 +52,7 @@ func config() (stConfig, error) {
 	return cfg, nil
 }
 
-func folderStatus(f string) (dbStatus, error) {
+func getFolderStatus(f string) (dbStatus, error) {
 	r, err := c.R().SetHeader("X-API-Key", *apiKey).SetQueryString("folder=" + f).Get(*target + "/rest/db/status")
 	if err != nil {
 		return dbStatus{}, err
@@ -67,7 +67,7 @@ func folderStatus(f string) (dbStatus, error) {
 	return dbs, nil
 }
 
-func completion(d string) (dbCompletion, error) {
+func getCompletion(d string) (dbCompletion, error) {
 	r, err := c.R().SetHeader("X-API-Key", *apiKey).SetQueryString("device=" + d).Get(*target + "/rest/db/completion")
 	if err != nil {
 		return dbCompletion{}, err
@@ -82,7 +82,7 @@ func completion(d string) (dbCompletion, error) {
 	return dbc, nil
 }
 
-func connection() (stConnections, error) {
+func getConnection() (stConnections, error) {
 	r, err := c.R().SetHeader("X-API-Key", *apiKey).Get(*target + "/rest/system/connections")
 	if err != nil {
 		return nil, err
