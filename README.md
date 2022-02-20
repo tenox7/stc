@@ -35,8 +35,9 @@ variable. The API Key can be obtained from the Syncthing Web UI or `config.xml`
 ## Flags
 
 ```text
-  --apikey    - Syncthing API Key
-  --target    - URL of the Syncthing target
+  --apikey              - Syncthing API Key
+  --target              - URL of the Syncthing target
+  --ignore_cert_errors  - Ignore cert errors while using https
 ```
 
 ## Download binaries
