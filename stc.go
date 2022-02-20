@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,41 +18,37 @@
 package main
 
 import (
-	"crypto/tls"
 	"flag"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 	"time"
 
 	"text/tabwriter"
 
 	humanize "github.com/dustin/go-humanize"
-	"github.com/go-resty/resty/v2"
 	"github.com/hako/durafmt"
+	"github.com/tenox7/stc/api"
 )
 
 var (
 	apiKey = flag.String("apikey", "", "Syncthing API Key") // TODO: also check env var
 	target = flag.String("target", "http://127.0.0.1:8384", "Syncthing Target")
-	igCert = flag.Bool("ignore_cert_errors", false, "ignore TSL cert errors")
-
-	c = resty.New()
+	igCert = flag.Bool("ignore_cert_errors", false, "ignore https/ssl/tls cert errors")
 )
 
 func dash() error {
-	cfg, err := getConfig()
+	cfg, err := api.GetConfig()
 	if err != nil {
 		return err
 	}
 
-	st, err := getSysStatus()
+	st, err := api.GetSysStatus()
 	if err != nil {
 		return err
 	}
 
-	sv, err := getSysVersion()
+	sv, err := api.GetSysVersion()
 	if err != nil {
 		return err
 	}
@@ -68,7 +64,7 @@ func dash() error {
 		return fmt.Errorf("unable to find this device name")
 	}
 
-	cons, err := getConnection()
+	cons, err := api.GetConnection()
 	if err != nil {
 		return err
 	}
@@ -86,7 +82,7 @@ func dash() error {
 	fmt.Fprintf(t, "\nFolder\tPaused\tState\tGlobal\tLocal\n")
 
 	for _, f := range cfg.Folders {
-		fs, err := getFolderStatus(f.ID)
+		fs, err := api.GetFolderStatus(f.ID)
 		if err != nil {
 			return err
 		}
@@ -104,7 +100,7 @@ func dash() error {
 	fmt.Fprintf(t, "\nDevice\tPaused\tConn\tSync%%\tDownload\tUpload\n")
 
 	for _, d := range cfg.Devices {
-		co, err := getCompletion(d.DeviceID)
+		co, err := api.GetCompletion(d.DeviceID)
 		if err != nil {
 			return err
 		}
@@ -130,15 +126,17 @@ func main() {
 	if *apiKey == "" {
 		*apiKey = os.Getenv("APIKEY")
 	}
-	if *apiKey == "" {
-		log.Fatal(fmt.Errorf("apikey must be specified as a flag or variable"))
+
+	err := api.SetApiKeyTarget(*apiKey, *target)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	if *igCert {
-		c.SetTransport(&http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}})
+		api.IgnoreCertErrors()
 	}
 
-	err := dash()
+	err = dash()
 	if err != nil {
 		log.Fatal(err)
 	}
