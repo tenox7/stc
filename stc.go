@@ -18,9 +18,11 @@
 package main
 
 import (
+	"crypto/tls"
 	"flag"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"time"
 
@@ -34,6 +36,7 @@ import (
 var (
 	apiKey = flag.String("apikey", "", "Syncthing API Key") // TODO: also check env var
 	target = flag.String("target", "http://127.0.0.1:8384", "Syncthing Target")
+	igCert = flag.Bool("ignore_cert_errors", false, "ignore TSL cert errors")
 
 	c = resty.New()
 )
@@ -129,6 +132,10 @@ func main() {
 	}
 	if *apiKey == "" {
 		log.Fatal(fmt.Errorf("apikey must be specified as a flag or variable"))
+	}
+
+	if *igCert {
+		c.SetTransport(&http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}})
 	}
 
 	err := dash()
