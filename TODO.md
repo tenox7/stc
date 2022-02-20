@@ -1,7 +1,8 @@
 # STC Roadmap
 
-* Device throughput
+* Device throughput with interval
 * More stats
-* go term colors, etc
-* combine paused/state in to one column
+* Display alerts like local additions, new device/share requests
+* Go term colors, etc
+* Combine paused/state in to one column
 * API POST functions
