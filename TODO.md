@@ -1,5 +1,7 @@
 # STC Roadmap
 
+* Ignore cert errors
+* API in to separate module so that api.GetStatus()
 * Find api key in config.xml
 * Device throughput
 * More stats
