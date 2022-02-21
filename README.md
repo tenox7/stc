@@ -35,7 +35,7 @@ Key on it's own.
 
 Stc takes `--apikey=xxx` and `--target=http://...` flags to connect to a
 Syncthing service. The API Key can be obtained from the Syncthing Web UI
-(General tab) or from `config.xml` file.
+(Settings:General tab) or from `config.xml` file.
 
 API Key can also be specified by `APIKEY` environmental variable.
 
