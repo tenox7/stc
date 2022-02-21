@@ -111,8 +111,8 @@ func GetFolderStatus(f string) (DbStatus, error) {
 	return dbs, nil
 }
 
-func GetCompletion(d string) (DbCompletion, error) {
-	r, err := c.R().SetHeader("X-API-Key", apiKey).SetQueryString("device=" + d).Get(target + "/rest/db/completion")
+func GetCompletion(qStr string) (DbCompletion, error) {
+	r, err := c.R().SetHeader("X-API-Key", apiKey).SetQueryString(qStr).Get(target + "/rest/db/completion")
 	if err != nil {
 		return DbCompletion{}, err
 	}

@@ -79,17 +79,22 @@ func dash() error {
 		sv.Version,
 	)
 
-	fmt.Fprintf(t, "\nFolder\tPaused\tState\tGlobal\tLocal\tOoSync\n")
+	fmt.Fprintf(t, "\nFolder\tPaused\tState\tSync\tGlobal\tLocal\tOoSync\n")
 
 	for _, f := range cfg.Folders {
 		fs, err := api.GetFolderStatus(f.ID)
 		if err != nil {
 			return err
 		}
-		fmt.Fprintf(t, "%v\t%v\t%v\t%v\t%v\t%v\n",
+		co, err := api.GetCompletion("folder=" + f.ID)
+		if err != nil {
+			return err
+		}
+		fmt.Fprintf(t, "%v\t%v\t%v\t%5.1f%%\t%v\t%v\t%v\n",
 			f.Label,
 			f.Paused,
 			fs.State,
+			co.Completion,
 			humanize.Bytes(fs.GlobalBytes),
 			humanize.Bytes(fs.LocalBytes),
 			humanize.Bytes(fs.NeedBytes),
@@ -101,7 +106,7 @@ func dash() error {
 	fmt.Fprintf(t, "\nDevice\tPaused\tConn\tSync\tDownload\tUpload\tOoSync\n")
 
 	for _, d := range cfg.Devices {
-		co, err := api.GetCompletion(d.DeviceID)
+		co, err := api.GetCompletion("device=" + d.DeviceID)
 		if err != nil {
 			return err
 		}
