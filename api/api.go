@@ -59,6 +59,7 @@ type DbStatus struct {
 
 type DbCompletion struct {
 	Completion float64 `json:"completion"`
+	NeedBytes  uint64  `json:"needBytes"`
 }
 
 func IgnoreCertErrors() {
