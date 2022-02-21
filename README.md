@@ -1,7 +1,7 @@
 # STC - Syncthing Cli
 
-This is an unofficial command line tool for [Syncthing](https://syncthing.net/).
-Stc can be used to quicky check status of Syncthing from a terminal / command line
+Stc is a command line tool for [Syncthing](https://syncthing.net/).
+It can be used to quicky check status of Syncthing from a terminal / command line
 without need of a Web Browser. For example on a remote machine over ssh, without port
 forwarding or if you have large number of machines to query.
 
@@ -25,11 +25,11 @@ backup-nas      false     true   100.0%  6.3 kB    7.0 kB
 
 ## Usage
 
-The tool needs `--apikey=xxxx` and `--target=http://...:8384` flags to connect
-to the Syncthing API. The API Key can be obtained from the Syncthing Web UI (General
-tab) or in `config.xml` file.
+The tool needs *apikey* and *target* flags to connect to the Syncthing service.
+The API Key can be obtained from the Syncthing Web UI (General tab) or from 
+`config.xml` file.
 
-If you place `stc` binary in the Syncthing home folder or specify `--homedir`
+If you place `stc` binary in the Syncthing home folder or specify *homedir*
 flag, it will try to obtain the right values from `config.xml`.
 
 API Key can also be specified by `APIKEY` environmental variable.
@@ -42,7 +42,9 @@ If you use TLS/SSL/https without valid certificate you can use the flag
 ```text
   --apikey              - Syncthing API Key
   --target              - URL of the Syncthing target
-  --ignore_cert_errors  - Ignore cert errors while using https
+  --homedir             - Path of Syncthing home directory, if specified stc
+                          will try to find apikey and target from config.xml
+  --ignore_cert_errors  - Ignore cert errors while using https/SSL/TLS
 ```
 
 ## Download binaries
