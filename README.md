@@ -25,12 +25,17 @@ homenas         false     true   100.0%  0 B       0 B
 
 ## Usage
 
-The tool by default connects to `http://127.0.0.1:8384` however you can target
-different machines by using `--target` flag.
+The tool needs `--apikey=xxxx` and `--target=http://...:8384` flags to connect
+to the Syncthing API. The API Key can be obtained from the Syncthing Web UI (General
+tab) or in `config.xml` file.
 
-You must specify API Key by using etiher `--apikey` flag or `APIKEY` environment
-variable. The API Key can be obtained from the Syncthing Web UI or `config.xml`
-(`grep apikey config.xml`).
+If you place `stc` binary in the Syncthing home folder or specify `--homedir`
+flag, it will try to obtain the right values in `config.xml`.
+
+API Key can also be specified by `APIKEY` environmental variable.
+
+If you use TLS/SSL/https without valid certificate you can use the flag
+`--ignore_cert_errors` to supress the errors. This is considered very unsecure.
 
 ## Flags
 

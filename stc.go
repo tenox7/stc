@@ -32,9 +32,10 @@ import (
 )
 
 var (
-	apiKey = flag.String("apikey", "", "Syncthing API Key") // TODO: also check env var
-	target = flag.String("target", "http://127.0.0.1:8384", "Syncthing Target")
-	igCert = flag.Bool("ignore_cert_errors", false, "ignore https/ssl/tls cert errors")
+	apiKey  = flag.String("apikey", "", "Syncthing API Key")
+	target  = flag.String("target", "", "Syncthing Target URL")
+	homeDir = flag.String("homedir", "", "Syncthing Home Directory, used to get API Key and Target")
+	igCert  = flag.Bool("ignore_cert_errors", false, "ignore https/ssl/tls cert errors")
 )
 
 func dash() error {
@@ -123,11 +124,12 @@ func dash() error {
 func main() {
 	flag.Parse()
 
-	if *apiKey == "" {
-		*apiKey = os.Getenv("APIKEY")
+	a, t, err := cfg(*apiKey, *target, *homeDir)
+	if err != nil {
+		log.Fatal("apikey and target flags not specified, config file: ", err)
 	}
 
-	err := api.SetApiKeyTarget(*apiKey, *target)
+	err = api.SetApiKeyTarget(a, t)
 	if err != nil {
 		log.Fatal(err)
 	}
