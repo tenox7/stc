@@ -106,6 +106,10 @@ func dash() error {
 			return err
 		}
 
+		if d.Name == myName {
+			d.Name = "*" + d.Name
+		}
+
 		fmt.Fprintf(t, "%v\t%v\t%v\t%5.1f%%\t%v\t%v\n",
 			d.Name,
 			d.Paused,
