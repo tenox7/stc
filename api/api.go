@@ -78,6 +78,9 @@ func GetConfig() (StConfig, error) {
 	if err != nil {
 		return StConfig{}, err
 	}
+	if r.IsError() {
+		return StConfig{}, fmt.Errorf(r.Status())
+	}
 
 	cfg := StConfig{}
 	err = json.Unmarshal(r.Body(), &cfg)
@@ -92,6 +95,9 @@ func GetFolderStatus(f string) (DbStatus, error) {
 	r, err := c.R().SetHeader("X-API-Key", apiKey).SetQueryString("folder=" + f).Get(target + "/rest/db/status")
 	if err != nil {
 		return DbStatus{}, err
+	}
+	if r.IsError() {
+		return DbStatus{}, fmt.Errorf(r.Status())
 	}
 
 	dbs := DbStatus{}
@@ -108,6 +114,9 @@ func GetCompletion(d string) (DbCompletion, error) {
 	if err != nil {
 		return DbCompletion{}, err
 	}
+	if r.IsError() {
+		return DbCompletion{}, fmt.Errorf(r.Status())
+	}
 
 	dbc := DbCompletion{}
 	err = json.Unmarshal(r.Body(), &dbc)
@@ -122,6 +131,9 @@ func GetConnection() (SysConn, error) {
 	r, err := c.R().SetHeader("X-API-Key", apiKey).Get(target + "/rest/system/connections")
 	if err != nil {
 		return nil, err
+	}
+	if r.IsError() {
+		return nil, fmt.Errorf(r.Status())
 	}
 
 	co := SysConnections{}
@@ -138,6 +150,9 @@ func GetSysStatus() (SysStatus, error) {
 	if err != nil {
 		return SysStatus{}, err
 	}
+	if r.IsError() {
+		return SysStatus{}, fmt.Errorf(r.Status())
+	}
 
 	st := SysStatus{}
 	err = json.Unmarshal(r.Body(), &st)
@@ -152,6 +167,9 @@ func GetSysVersion() (SysVersion, error) {
 	r, err := c.R().SetHeader("X-API-Key", apiKey).Get(target + "/rest/system/version")
 	if err != nil {
 		return SysVersion{}, err
+	}
+	if r.IsError() {
+		return SysVersion{}, fmt.Errorf(r.Status())
 	}
 
 	ve := SysVersion{}
