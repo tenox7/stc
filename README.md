@@ -25,14 +25,22 @@ backup-nas      false     true   100.0%  6.3 kB    7.0 kB
 
 ## Usage
 
-The tool needs *apikey* and *target* flags to connect to the Syncthing service.
-The API Key can be obtained from the Syncthing Web UI (General tab) or from 
-`config.xml` file.
+### Easy Mode
 
-If you place `stc` binary in the Syncthing home folder or specify *homedir*
-flag, it will try to obtain the right values from `config.xml`.
+Place `stc` binary in Syncthing home directory and run it from there, or
+specify it with `--homedir=/path..`. Stc will try to find the URL and API
+Key on it's own.
+
+### Advanced / Remote Mode
+
+Stc takes `--apikey=xxx` and `--target=http://...` flags to connect to a
+Syncthing service. The API Key can be obtained from the Syncthing Web UI
+(General tab) or from `config.xml` file.
 
 API Key can also be specified by `APIKEY` environmental variable.
+
+If you place `stc` binary in the Syncthing home folder or specify `--homedir`
+flag, it will try to obtain the right values from `config.xml`.
 
 If you use TLS/SSL/https without valid certificate you can use the flag
 `--ignore_cert_errors` to supress the errors. This is considered very unsecure.
