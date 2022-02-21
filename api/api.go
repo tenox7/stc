@@ -53,6 +53,7 @@ type DbStatus struct {
 	GlobalFiles uint64 `json:"globalFiles"`
 	LocalBytes  uint64 `json:"localBytes"`
 	LocalFiles  uint64 `json:"localFiles"`
+	NeedBytes   uint64 `json:"needBytes"`
 	State       string `json:"state"`
 }
 

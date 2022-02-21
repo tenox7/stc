@@ -80,19 +80,20 @@ func dash() error {
 		sv.Version,
 	)
 
-	fmt.Fprintf(t, "\nFolder\tPaused\tState\tGlobal\tLocal\n")
+	fmt.Fprintf(t, "\nFolder\tPaused\tState\tGlobal\tLocal\tOoSync\n")
 
 	for _, f := range cfg.Folders {
 		fs, err := api.GetFolderStatus(f.ID)
 		if err != nil {
 			return err
 		}
-		fmt.Fprintf(t, "%v\t%v\t%v\t%v\t%v\n",
+		fmt.Fprintf(t, "%v\t%v\t%v\t%v\t%v\t%v\n",
 			f.Label,
 			f.Paused,
 			fs.State,
 			humanize.Bytes(fs.GlobalBytes),
 			humanize.Bytes(fs.LocalBytes),
+			humanize.Bytes(fs.NeedBytes),
 		)
 	}
 
