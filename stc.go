@@ -72,11 +72,10 @@ func dash() error {
 
 	t := tabwriter.NewWriter(os.Stdout, 9, 0, 2, ' ', tabwriter.TabIndent)
 
-	fmt.Fprintf(t, "Host\tUptime\tCPU%%\tVersion\n")
-	fmt.Fprintf(t, "%v\t%v\t%.1f%%\t%v\n",
+	fmt.Fprintf(t, "Host\tUptime\tVersion\n")
+	fmt.Fprintf(t, "%v\t%v\t%v\n",
 		myName,
 		durafmt.ParseShort(time.Duration(st.Uptime*1000000000)),
-		st.CpuPercent,
 		sv.Version,
 	)
 
