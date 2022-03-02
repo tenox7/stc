@@ -122,6 +122,9 @@ func GetCompletion(qStr string) (DbCompletion, error) {
 	if err != nil {
 		return DbCompletion{}, err
 	}
+	if r.StatusCode() == 404 {
+		return DbCompletion{}, nil
+	}
 	if r.IsError() {
 		return DbCompletion{}, apiError(r.Status())
 	}
