@@ -57,3 +57,10 @@ func isConn(paused, conn bool) string {
 	}
 	return "Offline"
 }
+
+func fStatus(paused bool, status string) string {
+	if paused {
+		return "Paused"
+	}
+	return status
+}
