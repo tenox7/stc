@@ -47,3 +47,13 @@ func cfg(apiKey, target, homeDir string) (string, string, error) {
 
 	return x.GUI.ApiKey, p + x.GUI.Address, nil
 }
+
+func isConn(paused, conn bool) string {
+	if paused {
+		return "Paused"
+	}
+	if conn {
+		return "OK"
+	}
+	return "Offline"
+}

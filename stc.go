@@ -103,7 +103,7 @@ func dash() error {
 
 	t.Flush()
 
-	fmt.Fprintf(t, "\nDevice\tPaused\tConn\tSync\tDownload\tUpload\tOoSync\n")
+	fmt.Fprintf(t, "\nDevice\tStatus\tSync\tDownload\tUpload\tOoSync\n")
 
 	for _, d := range cfg.Devices {
 		co, err := api.GetCompletion("device=" + d.DeviceID)
@@ -115,10 +115,9 @@ func dash() error {
 			d.Name = "*" + d.Name
 		}
 
-		fmt.Fprintf(t, "%v\t%v\t%v\t%5.1f%%\t%v\t%v\t%v\n",
+		fmt.Fprintf(t, "%v\t%v\t%5.1f%%\t%v\t%v\t%v\n",
 			d.Name,
-			d.Paused,
-			cons[d.DeviceID].Connected,
+			isConn(d.Paused, cons[d.DeviceID].Connected),
 			co.Completion,
 			humanize.Bytes(cons[d.DeviceID].InBytesTotal),
 			humanize.Bytes(cons[d.DeviceID].OutBytesTotal),
