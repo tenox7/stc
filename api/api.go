@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"runtime"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -66,6 +67,11 @@ func IgnoreCertErrors() {
 	c.SetTransport(&http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}})
 }
 
+func apiError(e string) error {
+	pc, _, _, _ := runtime.Caller(1)
+	return fmt.Errorf("%s: %s", runtime.FuncForPC(pc).Name(), e)
+}
+
 func SetApiKeyTarget(a, t string) error {
 	if a == "" || t == "" {
 		return fmt.Errorf("apikey and target must be specified")
@@ -81,7 +87,7 @@ func GetConfig() (StConfig, error) {
 		return StConfig{}, err
 	}
 	if r.IsError() {
-		return StConfig{}, fmt.Errorf(r.Status())
+		return StConfig{}, apiError(r.Status())
 	}
 
 	cfg := StConfig{}
@@ -99,7 +105,7 @@ func GetFolderStatus(f string) (DbStatus, error) {
 		return DbStatus{}, err
 	}
 	if r.IsError() {
-		return DbStatus{}, fmt.Errorf(r.Status())
+		return DbStatus{}, apiError(r.Status())
 	}
 
 	dbs := DbStatus{}
@@ -117,7 +123,7 @@ func GetCompletion(qStr string) (DbCompletion, error) {
 		return DbCompletion{}, err
 	}
 	if r.IsError() {
-		return DbCompletion{}, fmt.Errorf(r.Status())
+		return DbCompletion{}, apiError(r.Status())
 	}
 
 	dbc := DbCompletion{}
@@ -135,7 +141,7 @@ func GetConnection() (SysConn, error) {
 		return nil, err
 	}
 	if r.IsError() {
-		return nil, fmt.Errorf(r.Status())
+		return nil, apiError(r.Status())
 	}
 
 	co := SysConnections{}
@@ -153,7 +159,7 @@ func GetSysStatus() (SysStatus, error) {
 		return SysStatus{}, err
 	}
 	if r.IsError() {
-		return SysStatus{}, fmt.Errorf(r.Status())
+		return SysStatus{}, apiError(r.Status())
 	}
 
 	st := SysStatus{}
@@ -171,7 +177,7 @@ func GetSysVersion() (SysVersion, error) {
 		return SysVersion{}, err
 	}
 	if r.IsError() {
-		return SysVersion{}, fmt.Errorf(r.Status())
+		return SysVersion{}, apiError(r.Status())
 	}
 
 	ve := SysVersion{}
