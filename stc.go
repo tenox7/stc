@@ -163,13 +163,10 @@ func dumpMyID() error {
 	return nil
 }
 
-func rescan(fName string) error {
-	if fName == "all" {
-		return api.Rescan("")
-	}
+func folderID(fName string) (string, error) {
 	cfg, err := api.GetConfig()
 	if err != nil {
-		return err
+		return "", err
 	}
 	fID := ""
 	for _, f := range cfg.Folders {
@@ -177,6 +174,17 @@ func rescan(fName string) error {
 			continue
 		}
 		fID = f.ID
+	}
+	return fID, nil
+}
+
+func rescan(fName string) error {
+	if fName == "all" {
+		return api.Rescan("")
+	}
+	fID, err := folderID(fName)
+	if err != nil {
+		return err
 	}
 	if fID == "" {
 		return fmt.Errorf("folder %q not found, use 'all' to rescan all folders", fName)
@@ -185,16 +193,9 @@ func rescan(fName string) error {
 }
 
 func override(fName string) error {
-	cfg, err := api.GetConfig()
+	fID, err := folderID(fName)
 	if err != nil {
 		return err
-	}
-	fID := ""
-	for _, f := range cfg.Folders {
-		if f.Label != fName {
-			continue
-		}
-		fID = f.ID
 	}
 	if fID == "" {
 		return fmt.Errorf("folder %q not found", fName)
