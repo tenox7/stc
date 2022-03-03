@@ -81,7 +81,7 @@ func dash() error {
 		sv.Version,
 	)
 
-	fmt.Fprintf(t, "\nFolder\tStatus\tSync\tGlobal\tLocal\tOoSync\n")
+	fmt.Fprintf(t, "\nFolder\tStatus\tSync\tGlobal\tLocal\tNeeds\n")
 
 	for _, f := range cfg.Folders {
 		fs, err := api.GetFolderStatus(f.ID)
@@ -104,7 +104,7 @@ func dash() error {
 
 	t.Flush()
 
-	fmt.Fprintf(t, "\nDevice\tStatus\tSync\tDownload\tUpload\tOoSync\n")
+	fmt.Fprintf(t, "\nDevice\tStatus\tSync\tDownload\tUpload\tNeeds\n")
 
 	for _, d := range cfg.Devices {
 		co, err := api.GetCompletion("device=" + d.DeviceID)
