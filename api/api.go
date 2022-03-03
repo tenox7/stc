@@ -251,7 +251,7 @@ func PostError(msg string) error {
 }
 
 func Rescan(folderID string) error {
-	r, err := c.R().Post("db/scan?folder=" + folderID)
+	r, err := c.R().SetQueryString("folder=" + folderID).Post("db/scan")
 	if err != nil {
 		return nil
 	}
