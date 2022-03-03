@@ -163,6 +163,27 @@ func dumpMyID() error {
 	return nil
 }
 
+func rescan(fName string) error {
+	if fName == "all" {
+		return api.Rescan("")
+	}
+	cfg, err := api.GetConfig()
+	if err != nil {
+		return err
+	}
+	fID := ""
+	for _, f := range cfg.Folders {
+		if f.Label != fName {
+			continue
+		}
+		fID = f.ID
+	}
+	if fID == "" {
+		return fmt.Errorf("folder %q not found, use 'all' to rescan all folders", fName)
+	}
+	return api.Rescan(fID)
+}
+
 func main() {
 	flag.Usage = usage
 	flag.Parse()
@@ -198,6 +219,8 @@ func main() {
 		err = api.PostError(flag.Arg(1))
 	case "print_id":
 		err = dumpMyID()
+	case "rescan":
+		err = rescan(flag.Arg(1))
 	default:
 		err = dash()
 	}

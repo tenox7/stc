@@ -6,5 +6,5 @@
 * Display new device/share requests
 * Recent changes
 * Override changes
-* Rescan folder
+* Wait for folder sync
 * Pause/resume folder/device

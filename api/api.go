@@ -251,3 +251,14 @@ func PostError(msg string) error {
 	_, err := c.R().SetHeader("X-API-Key", apiKey).SetBody(msg).Post(target + "/rest/system/error")
 	return err
 }
+
+func Rescan(folderID string) error {
+	r, err := c.R().SetHeader("X-API-Key", apiKey).Post(target + "/rest/db/scan?folder=" + folderID)
+	if err != nil {
+		return nil
+	}
+	if r.IsError() {
+		return apiError(r.Status())
+	}
+	return nil
+}
