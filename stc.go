@@ -163,21 +163,6 @@ func dumpMyID() error {
 	return nil
 }
 
-func folderID(fName string) (string, error) {
-	cfg, err := api.GetConfig()
-	if err != nil {
-		return "", err
-	}
-	fID := ""
-	for _, f := range cfg.Folders {
-		if f.Label != fName {
-			continue
-		}
-		fID = f.ID
-	}
-	return fID, nil
-}
-
 func rescan(fName string) error {
 	if fName == "all" {
 		return api.Rescan("")

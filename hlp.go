@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"github.com/tenox7/stc/api"
 )
 
 func cfg(apiKey, target, homeDir string) (string, string, error) {
@@ -66,4 +68,19 @@ func fStatus(paused bool, status string) string {
 		return "Paused"
 	}
 	return status
+}
+
+func folderID(fName string) (string, error) {
+	cfg, err := api.GetConfig()
+	if err != nil {
+		return "", err
+	}
+	fID := ""
+	for _, f := range cfg.Folders {
+		if f.Label != fName {
+			continue
+		}
+		fID = f.ID
+	}
+	return fID, nil
 }
