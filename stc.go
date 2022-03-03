@@ -116,7 +116,7 @@ func dash() error {
 
 		fmt.Fprintf(t, "%v\t%v\t%5.1f%%\t%v\t%v\t%v\n",
 			d.Name,
-			isConn(d.Paused, cons[d.DeviceID].Connected),
+			isConn(d.Paused, cons[d.DeviceID].Connected, d.DeviceID, st.MyID),
 			co.Completion,
 			humanize.Bytes(cons[d.DeviceID].InBytesTotal),
 			humanize.Bytes(cons[d.DeviceID].OutBytesTotal),
