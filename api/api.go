@@ -11,8 +11,7 @@ import (
 )
 
 var (
-	c      = resty.New()
-	target string
+	c = resty.New()
 )
 
 type StConfig struct {
@@ -83,12 +82,12 @@ func SetApiKeyTarget(a, t string) error {
 		return fmt.Errorf("apikey and target must be specified")
 	}
 	c.SetHeader("X-API-Key", a)
-	target = t
+	c.SetBaseURL(t + "/rest/")
 	return nil
 }
 
 func GetConfig() (StConfig, error) {
-	r, err := c.R().Get(target + "/rest/config")
+	r, err := c.R().Get("config")
 	if err != nil {
 		return StConfig{}, err
 	}
@@ -106,7 +105,7 @@ func GetConfig() (StConfig, error) {
 }
 
 func GetFolderStatus(f string) (DbStatus, error) {
-	r, err := c.R().SetQueryString("folder=" + f).Get(target + "/rest/db/status")
+	r, err := c.R().SetQueryString("folder=" + f).Get("db/status")
 	if err != nil {
 		return DbStatus{}, err
 	}
@@ -124,7 +123,7 @@ func GetFolderStatus(f string) (DbStatus, error) {
 }
 
 func GetCompletion(qStr string) (DbCompletion, error) {
-	r, err := c.R().SetQueryString(qStr).Get(target + "/rest/db/completion")
+	r, err := c.R().SetQueryString(qStr).Get("db/completion")
 	if err != nil {
 		return DbCompletion{}, err
 	}
@@ -145,7 +144,7 @@ func GetCompletion(qStr string) (DbCompletion, error) {
 }
 
 func GetConnection() (SysConn, error) {
-	r, err := c.R().Get(target + "/rest/system/connections")
+	r, err := c.R().Get("system/connections")
 	if err != nil {
 		return nil, err
 	}
@@ -163,7 +162,7 @@ func GetConnection() (SysConn, error) {
 }
 
 func GetSysStatus() (SysStatus, error) {
-	r, err := c.R().Get(target + "/rest/system/status")
+	r, err := c.R().Get("system/status")
 	if err != nil {
 		return SysStatus{}, err
 	}
@@ -181,7 +180,7 @@ func GetSysStatus() (SysStatus, error) {
 }
 
 func GetSysVersion() (SysVersion, error) {
-	r, err := c.R().Get(target + "/rest/system/version")
+	r, err := c.R().Get("system/version")
 	if err != nil {
 		return SysVersion{}, err
 	}
@@ -199,7 +198,7 @@ func GetSysVersion() (SysVersion, error) {
 }
 
 func GetLogTxt() (string, error) {
-	r, err := c.R().Get(target + "/rest/system/log.txt")
+	r, err := c.R().Get("system/log.txt")
 	if err != nil {
 		return "", err
 	}
@@ -210,22 +209,22 @@ func GetLogTxt() (string, error) {
 }
 
 func Shutdown() error {
-	_, err := c.R().Post(target + "/rest/system/shutdown")
+	_, err := c.R().Post("system/shutdown")
 	return err
 }
 
 func Restart() error {
-	_, err := c.R().Post(target + "/rest/system/restart")
+	_, err := c.R().Post("system/restart")
 	return err
 }
 
 func ResetDB() error {
-	_, err := c.R().Post(target + "/rest/system/reset")
+	_, err := c.R().Post("system/reset")
 	return err
 }
 
 func GetErrors() (SysErrors, error) {
-	r, err := c.R().Get(target + "/rest/system/error")
+	r, err := c.R().Get("system/error")
 	if err != nil {
 		return SysErrors{}, err
 	}
@@ -242,17 +241,17 @@ func GetErrors() (SysErrors, error) {
 }
 
 func ClearErrors() error {
-	_, err := c.R().Post(target + "/rest/system/error/clear")
+	_, err := c.R().Post("system/error/clear")
 	return err
 }
 
 func PostError(msg string) error {
-	_, err := c.R().SetBody(msg).Post(target + "/rest/system/error")
+	_, err := c.R().SetBody(msg).Post("system/error")
 	return err
 }
 
 func Rescan(folderID string) error {
-	r, err := c.R().Post(target + "/rest/db/scan?folder=" + folderID)
+	r, err := c.R().Post("db/scan?folder=" + folderID)
 	if err != nil {
 		return nil
 	}
