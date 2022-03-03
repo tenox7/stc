@@ -141,7 +141,19 @@ func dumpLogTxt() error {
 	return nil
 }
 
+func dumpErrors() error {
+	e, err := api.GetErrors()
+	if err != nil {
+		return err
+	}
+	for _, er := range e.Errors {
+		fmt.Println(er.When, er.Message)
+	}
+	return nil
+}
+
 func main() {
+	flag.Usage = usage
 	flag.Parse()
 
 	a, t, err := cfg(*apiKey, *target, *homeDir)
