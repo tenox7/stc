@@ -229,3 +229,19 @@ func main() {
 		log.Fatal(err)
 	}
 }
+
+func usage() {
+	o := flag.CommandLine.Output()
+	fmt.Fprintf(o, "stc [flags] [commands] [args]\n\nflags:\n")
+	flag.PrintDefaults()
+	fmt.Fprintln(o, `commands:
+	log          - print syncthing "recent" log
+	restart      - restart syncthing daemon
+	shutdown     - shutdown syncthing daemon
+	print_errors - print errors visible in web UI
+	clear_errors - clear errors in the web UI
+	post_error   - posts a custom error message in the web UI
+	print_id     - print this node ID
+	reset_db     - reset the index
+	rescan       - rescan a folder or 'all'`)
+}
