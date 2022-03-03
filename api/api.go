@@ -29,6 +29,7 @@ type StConfig struct {
 		Paused   bool   `json:"paused"`
 	}
 }
+
 type SysConn map[string]struct {
 	Connected     bool   `json:"connected"`
 	InBytesTotal  uint64 `json:"inBytesTotal"`
@@ -61,6 +62,13 @@ type DbStatus struct {
 type DbCompletion struct {
 	Completion float64 `json:"completion"`
 	NeedBytes  uint64  `json:"needBytes"`
+}
+
+type SysErrors struct {
+	Errors []struct {
+		When    string `json:"when"`
+		Message string `json:"message"`
+	} `json:"errors"`
 }
 
 func IgnoreCertErrors() {
@@ -210,5 +218,32 @@ func Shutdown() error {
 
 func Restart() error {
 	_, err := c.R().SetHeader("X-API-Key", apiKey).Post(target + "/rest/system/restart")
+	return err
+}
+
+func GetErrors() (SysErrors, error) {
+	r, err := c.R().SetHeader("X-API-Key", apiKey).Get(target + "/rest/system/error")
+	if err != nil {
+		return SysErrors{}, err
+	}
+	if r.IsError() {
+		return SysErrors{}, apiError(r.Status())
+	}
+
+	se := SysErrors{}
+	err = json.Unmarshal(r.Body(), &se)
+	if err != nil {
+		return SysErrors{}, err
+	}
+	return se, nil
+}
+
+func ClearErrors() error {
+	_, err := c.R().SetHeader("X-API-Key", apiKey).Post(target + "/rest/system/error/clear")
+	return err
+}
+
+func PostError(msg string) error {
+	_, err := c.R().SetHeader("X-API-Key", apiKey).SetBody(msg).Post(target + "/rest/system/error")
 	return err
 }

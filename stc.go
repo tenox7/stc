@@ -39,6 +39,9 @@ var (
 )
 
 func dash() error {
+	dumpErrors()
+	fmt.Println()
+
 	cfg, err := api.GetConfig()
 	if err != nil {
 		return err
@@ -129,7 +132,7 @@ func dash() error {
 	return nil
 }
 
-func DumpLogTxt() error {
+func dumpLogTxt() error {
 	s, err := api.GetLogTxt()
 	if err != nil {
 		return err
@@ -157,11 +160,17 @@ func main() {
 
 	switch flag.Arg(0) {
 	case "log":
-		err = DumpLogTxt()
+		err = dumpLogTxt()
 	case "restart":
 		err = api.Restart()
 	case "shutdown":
 		err = api.Shutdown()
+	case "print_errors":
+		err = dumpErrors()
+	case "clear_errors":
+		err = api.ClearErrors()
+	case "post_error":
+		err = api.PostError(flag.Arg(1))
 	default:
 		err = dash()
 	}
