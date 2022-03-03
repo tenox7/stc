@@ -191,3 +191,14 @@ func GetSysVersion() (SysVersion, error) {
 
 	return ve, nil
 }
+
+func GetLogTxt() (string, error) {
+	r, err := c.R().SetHeader("X-API-Key", apiKey).Get(target + "/rest/system/log.txt")
+	if err != nil {
+		return "", err
+	}
+	if r.IsError() {
+		return "", apiError(r.Status())
+	}
+	return r.String(), nil
+}

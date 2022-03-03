@@ -129,6 +129,15 @@ func dash() error {
 	return nil
 }
 
+func DumpLogTxt() error {
+	s, err := api.GetLogTxt()
+	if err != nil {
+		return err
+	}
+	fmt.Println(s)
+	return nil
+}
+
 func main() {
 	flag.Parse()
 
@@ -146,7 +155,14 @@ func main() {
 		api.IgnoreCertErrors()
 	}
 
-	err = dash()
+	switch flag.Arg(0) {
+	case "log":
+		err = DumpLogTxt()
+
+	default:
+		err = dash()
+	}
+
 	if err != nil {
 		log.Fatal(err)
 	}
