@@ -12,7 +12,6 @@ import (
 
 var (
 	c      = resty.New()
-	apiKey string
 	target string
 )
 
@@ -83,13 +82,13 @@ func SetApiKeyTarget(a, t string) error {
 	if a == "" || t == "" {
 		return fmt.Errorf("apikey and target must be specified")
 	}
-	apiKey = a
+	c.SetHeader("X-API-Key", a)
 	target = t
 	return nil
 }
 
 func GetConfig() (StConfig, error) {
-	r, err := c.R().SetHeader("X-API-Key", apiKey).Get(target + "/rest/config")
+	r, err := c.R().Get(target + "/rest/config")
 	if err != nil {
 		return StConfig{}, err
 	}
@@ -107,7 +106,7 @@ func GetConfig() (StConfig, error) {
 }
 
 func GetFolderStatus(f string) (DbStatus, error) {
-	r, err := c.R().SetHeader("X-API-Key", apiKey).SetQueryString("folder=" + f).Get(target + "/rest/db/status")
+	r, err := c.R().SetQueryString("folder=" + f).Get(target + "/rest/db/status")
 	if err != nil {
 		return DbStatus{}, err
 	}
@@ -125,7 +124,7 @@ func GetFolderStatus(f string) (DbStatus, error) {
 }
 
 func GetCompletion(qStr string) (DbCompletion, error) {
-	r, err := c.R().SetHeader("X-API-Key", apiKey).SetQueryString(qStr).Get(target + "/rest/db/completion")
+	r, err := c.R().SetQueryString(qStr).Get(target + "/rest/db/completion")
 	if err != nil {
 		return DbCompletion{}, err
 	}
@@ -146,7 +145,7 @@ func GetCompletion(qStr string) (DbCompletion, error) {
 }
 
 func GetConnection() (SysConn, error) {
-	r, err := c.R().SetHeader("X-API-Key", apiKey).Get(target + "/rest/system/connections")
+	r, err := c.R().Get(target + "/rest/system/connections")
 	if err != nil {
 		return nil, err
 	}
@@ -164,7 +163,7 @@ func GetConnection() (SysConn, error) {
 }
 
 func GetSysStatus() (SysStatus, error) {
-	r, err := c.R().SetHeader("X-API-Key", apiKey).Get(target + "/rest/system/status")
+	r, err := c.R().Get(target + "/rest/system/status")
 	if err != nil {
 		return SysStatus{}, err
 	}
@@ -182,7 +181,7 @@ func GetSysStatus() (SysStatus, error) {
 }
 
 func GetSysVersion() (SysVersion, error) {
-	r, err := c.R().SetHeader("X-API-Key", apiKey).Get(target + "/rest/system/version")
+	r, err := c.R().Get(target + "/rest/system/version")
 	if err != nil {
 		return SysVersion{}, err
 	}
@@ -200,7 +199,7 @@ func GetSysVersion() (SysVersion, error) {
 }
 
 func GetLogTxt() (string, error) {
-	r, err := c.R().SetHeader("X-API-Key", apiKey).Get(target + "/rest/system/log.txt")
+	r, err := c.R().Get(target + "/rest/system/log.txt")
 	if err != nil {
 		return "", err
 	}
@@ -211,22 +210,22 @@ func GetLogTxt() (string, error) {
 }
 
 func Shutdown() error {
-	_, err := c.R().SetHeader("X-API-Key", apiKey).Post(target + "/rest/system/shutdown")
+	_, err := c.R().Post(target + "/rest/system/shutdown")
 	return err
 }
 
 func Restart() error {
-	_, err := c.R().SetHeader("X-API-Key", apiKey).Post(target + "/rest/system/restart")
+	_, err := c.R().Post(target + "/rest/system/restart")
 	return err
 }
 
 func ResetDB() error {
-	_, err := c.R().SetHeader("X-API-Key", apiKey).Post(target + "/rest/system/reset")
+	_, err := c.R().Post(target + "/rest/system/reset")
 	return err
 }
 
 func GetErrors() (SysErrors, error) {
-	r, err := c.R().SetHeader("X-API-Key", apiKey).Get(target + "/rest/system/error")
+	r, err := c.R().Get(target + "/rest/system/error")
 	if err != nil {
 		return SysErrors{}, err
 	}
@@ -243,17 +242,17 @@ func GetErrors() (SysErrors, error) {
 }
 
 func ClearErrors() error {
-	_, err := c.R().SetHeader("X-API-Key", apiKey).Post(target + "/rest/system/error/clear")
+	_, err := c.R().Post(target + "/rest/system/error/clear")
 	return err
 }
 
 func PostError(msg string) error {
-	_, err := c.R().SetHeader("X-API-Key", apiKey).SetBody(msg).Post(target + "/rest/system/error")
+	_, err := c.R().SetBody(msg).Post(target + "/rest/system/error")
 	return err
 }
 
 func Rescan(folderID string) error {
-	r, err := c.R().SetHeader("X-API-Key", apiKey).Post(target + "/rest/db/scan?folder=" + folderID)
+	r, err := c.R().Post(target + "/rest/db/scan?folder=" + folderID)
 	if err != nil {
 		return nil
 	}
