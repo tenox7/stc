@@ -249,5 +249,6 @@ func usage() {
 	post_error   - posts a custom error message in the web UI
 	print_id     - print this node ID
 	reset_db     - reset the index
-	rescan       - rescan a folder or 'all'`)
+	rescan       - rescan a folder or 'all'
+	override     - override local changes for a folder`)
 }
