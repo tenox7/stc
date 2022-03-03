@@ -19,7 +19,8 @@ func usage() {
 	shutdown     - shutdown syncthing daemon
 	print_errors - print errors visible in web UI
 	clear_errors - clear errors in the web UI
-	post_error   - posts a custom error message in the web UI`)
+	post_error   - posts a custom error message in the web UI
+	print_id     - print this node ID`)
 }
 
 func cfg(apiKey, target, homeDir string) (string, string, error) {

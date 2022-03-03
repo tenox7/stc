@@ -154,6 +154,15 @@ func dumpErrors(eLn bool) error {
 	return nil
 }
 
+func dumpMyID() error {
+	st, err := api.GetSysStatus()
+	if err != nil {
+		return err
+	}
+	fmt.Println(st.MyID)
+	return nil
+}
+
 func main() {
 	flag.Usage = usage
 	flag.Parse()
@@ -185,6 +194,8 @@ func main() {
 		err = api.ClearErrors()
 	case "post_error":
 		err = api.PostError(flag.Arg(1))
+	case "print_id":
+		err = dumpMyID()
 	default:
 		err = dash()
 	}

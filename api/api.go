@@ -41,9 +41,8 @@ type SysConnections struct {
 }
 
 type SysStatus struct {
-	CpuPercent float64 `json:"cpuPercent"`
-	MyID       string  `json:"myID"`
-	Uptime     int64   `json:"uptime"`
+	MyID   string `json:"myID"`
+	Uptime int64  `json:"uptime"`
 }
 
 type SysVersion struct {
