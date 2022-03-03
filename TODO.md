@@ -6,7 +6,5 @@
 * Display new device/share requests
 * Recent changes
 * Override changes
-* Get id
 * Rescan folder
 * Pause/resume folder/device
-* Reset DB

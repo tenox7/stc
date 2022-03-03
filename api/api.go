@@ -220,6 +220,11 @@ func Restart() error {
 	return err
 }
 
+func ResetDB() error {
+	_, err := c.R().SetHeader("X-API-Key", apiKey).Post(target + "/rest/system/reset")
+	return err
+}
+
 func GetErrors() (SysErrors, error) {
 	r, err := c.R().SetHeader("X-API-Key", apiKey).Get(target + "/rest/system/error")
 	if err != nil {

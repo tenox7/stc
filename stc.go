@@ -184,10 +184,12 @@ func main() {
 	switch flag.Arg(0) {
 	case "log":
 		err = dumpLogTxt()
-	case "restart":
-		err = api.Restart()
 	case "shutdown":
 		err = api.Shutdown()
+	case "restart":
+		err = api.Restart()
+	case "reset_db":
+		err = api.ResetDB()
 	case "print_errors":
 		err = dumpErrors(false)
 	case "clear_errors":
