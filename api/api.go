@@ -260,3 +260,14 @@ func Rescan(folderID string) error {
 	}
 	return nil
 }
+
+func Override(folderID string) error {
+	r, err := c.R().SetQueryString("folder=" + folderID).Post("db/override")
+	if err != nil {
+		return nil
+	}
+	if r.IsError() {
+		return apiError(r.Status())
+	}
+	return nil
+}

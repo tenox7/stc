@@ -184,6 +184,24 @@ func rescan(fName string) error {
 	return api.Rescan(fID)
 }
 
+func override(fName string) error {
+	cfg, err := api.GetConfig()
+	if err != nil {
+		return err
+	}
+	fID := ""
+	for _, f := range cfg.Folders {
+		if f.Label != fName {
+			continue
+		}
+		fID = f.ID
+	}
+	if fID == "" {
+		return fmt.Errorf("folder %q not found", fName)
+	}
+	return api.Override(fID)
+}
+
 func main() {
 	flag.Usage = usage
 	flag.Parse()
@@ -221,6 +239,8 @@ func main() {
 		err = dumpMyID()
 	case "rescan":
 		err = rescan(flag.Arg(1))
+	case "override":
+		err = override(flag.Arg(1))
 	default:
 		err = dash()
 	}
