@@ -158,7 +158,10 @@ func main() {
 	switch flag.Arg(0) {
 	case "log":
 		err = DumpLogTxt()
-
+	case "restart":
+		err = api.Restart()
+	case "shutdown":
+		err = api.Shutdown()
 	default:
 		err = dash()
 	}

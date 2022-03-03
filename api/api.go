@@ -202,3 +202,13 @@ func GetLogTxt() (string, error) {
 	}
 	return r.String(), nil
 }
+
+func Shutdown() error {
+	_, err := c.R().SetHeader("X-API-Key", apiKey).Post(target + "/rest/system/shutdown")
+	return err
+}
+
+func Restart() error {
+	_, err := c.R().SetHeader("X-API-Key", apiKey).Post(target + "/rest/system/restart")
+	return err
+}
