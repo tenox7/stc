@@ -215,13 +215,13 @@ func main() {
 		err = api.Restart()
 	case "reset_db":
 		err = api.ResetDB()
-	case "print_errors":
+	case "errors":
 		err = dumpErrors(false)
 	case "clear_errors":
 		err = api.ClearErrors()
 	case "post_error":
 		err = api.PostError(flag.Arg(1))
-	case "print_id":
+	case "id":
 		err = dumpMyID()
 	case "rescan":
 		err = rescan(flag.Arg(1))
@@ -244,10 +244,10 @@ func usage() {
 	log          - print syncthing "recent" log
 	restart      - restart syncthing daemon
 	shutdown     - shutdown syncthing daemon
-	print_errors - print errors visible in web UI
+	errors       - print errors visible in web UI
 	clear_errors - clear errors in the web UI
 	post_error   - posts a custom error message in the web UI
-	print_id     - print this node ID
+	id           - print this node ID
 	reset_db     - reset the index
 	rescan       - rescan a folder or 'all'
 	override     - override local changes for a folder`)
