@@ -54,6 +54,7 @@ type DbStatus struct {
 	LocalFiles  uint64 `json:"localFiles"`
 	NeedBytes   uint64 `json:"needBytes"`
 	State       string `json:"state"`
+	Errors      int    `json:"errors"`
 }
 
 type DbCompletion struct {

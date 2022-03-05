@@ -94,7 +94,7 @@ func dash() error {
 		}
 		fmt.Fprintf(t, "%v\t%v\t%5.1f%%\t%v\t%v\t%v\n",
 			f.Label,
-			fStatus(f.Paused, fs.State),
+			fStatus(f.Paused, fs.State, fs.Errors),
 			co.Completion,
 			humanize.Bytes(fs.GlobalBytes),
 			humanize.Bytes(fs.LocalBytes),
