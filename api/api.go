@@ -69,6 +69,13 @@ type SysErrors struct {
 	} `json:"errors"`
 }
 
+type FolderErrors struct {
+	Errors []struct {
+		Path  string `json:"path"`
+		Error string `json:"error"`
+	} `json:"errors"`
+}
+
 func IgnoreCertErrors() {
 	c.SetTransport(&http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}})
 }
@@ -224,7 +231,7 @@ func ResetDB() error {
 	return err
 }
 
-func GetErrors() (SysErrors, error) {
+func GetSysErrors() (SysErrors, error) {
 	r, err := c.R().Get("system/error")
 	if err != nil {
 		return SysErrors{}, err
@@ -249,6 +256,23 @@ func ClearErrors() error {
 func PostError(msg string) error {
 	_, err := c.R().SetBody(msg).Post("system/error")
 	return err
+}
+
+func GetFolderErrors(folderID string) (FolderErrors, error) {
+	r, err := c.R().SetQueryString("folder=" + folderID).Get("folder/errors")
+	if err != nil {
+		return FolderErrors{}, err
+	}
+	if r.IsError() {
+		return FolderErrors{}, apiError(r.Status())
+	}
+
+	fe := FolderErrors{}
+	err = json.Unmarshal(r.Body(), &fe)
+	if err != nil {
+		return FolderErrors{}, err
+	}
+	return fe, nil
 }
 
 func Rescan(folderID string) error {

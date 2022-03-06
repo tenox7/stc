@@ -25,6 +25,10 @@ backup-nas      false     true   100.0%  6.3 kB    7.0 kB
 
 ## Usage
 
+```sh
+$ stc [flags] [commands]
+```
+
 ### Easy Mode
 
 Place `stc` binary in Syncthing home directory and run it from there, or
@@ -53,6 +57,22 @@ If you use TLS/SSL/https without valid certificate you can use the flag
   --homedir             - Path of Syncthing home directory, if specified stc
                           will try to find apikey and target from config.xml
   --ignore_cert_errors  - Ignore cert errors while using https/SSL/TLS
+```
+
+## Arguments / Commands
+
+```text
+	log           - print syncthing "recent" log
+	restart       - restart syncthing daemon
+	shutdown      - shutdown syncthing daemon
+	errors        - print errors visible in web UI
+	clear_errors  - clear errors in the web UI
+	post_error    - posts a custom error message in the web UI
+	folder_errors - prints folder errors from scan or pull
+	id            - print this node ID
+	reset_db      - reset the index
+	rescan        - rescan a folder or 'all'
+	override      - override local changes for a folder
 ```
 
 ## Download binaries

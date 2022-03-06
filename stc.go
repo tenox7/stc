@@ -141,7 +141,7 @@ func dumpLogTxt() error {
 }
 
 func dumpErrors(eLn bool) error {
-	e, err := api.GetErrors()
+	e, err := api.GetSysErrors()
 	if err != nil {
 		return err
 	}
@@ -188,6 +188,25 @@ func override(fName string) error {
 	return api.Override(fID)
 }
 
+func folderErrors(fName string) error {
+	fID, err := folderID(fName)
+	if err != nil {
+		return err
+	}
+	if fID == "" {
+		return fmt.Errorf("folder %q not found", fName)
+	}
+	fe, err := api.GetFolderErrors(fID)
+	if err != nil {
+		return err
+	}
+
+	for _, e := range fe.Errors {
+		fmt.Printf("Error: %v : %v\n", e.Path, e.Error)
+	}
+	return nil
+}
+
 func main() {
 	flag.Usage = usage
 	flag.Parse()
@@ -221,6 +240,8 @@ func main() {
 		err = api.ClearErrors()
 	case "post_error":
 		err = api.PostError(flag.Arg(1))
+	case "folder_errors":
+		err = folderErrors(flag.Arg(1))
 	case "id":
 		err = dumpMyID()
 	case "rescan":
@@ -241,14 +262,15 @@ func usage() {
 	fmt.Fprintf(o, "stc [flags] [commands] [args]\n\nflags:\n")
 	flag.PrintDefaults()
 	fmt.Fprintln(o, `commands:
-	log          - print syncthing "recent" log
-	restart      - restart syncthing daemon
-	shutdown     - shutdown syncthing daemon
-	errors       - print errors visible in web UI
-	clear_errors - clear errors in the web UI
-	post_error   - posts a custom error message in the web UI
-	id           - print this node ID
-	reset_db     - reset the index
-	rescan       - rescan a folder or 'all'
-	override     - override local changes for a folder`)
+	log           - print syncthing "recent" log
+	restart       - restart syncthing daemon
+	shutdown      - shutdown syncthing daemon
+	errors        - print errors visible in web UI
+	clear_errors  - clear errors in the web UI
+	post_error    - posts a custom error message in the web UI
+	folder_errors - prints folder errors from scan or pull
+	id            - print this node ID
+	reset_db      - reset the index
+	rescan        - rescan a folder or 'all'
+	override      - override local changes for a folder`)
 }
