@@ -1,5 +1,8 @@
 # STC Roadmap
 
+revert local should be only for receive-only folders
+override changes = needTotalItems if folder is send ontly
+
 * Override remote changes
 * Revert local changes in addition to override
 
