@@ -1,5 +1,8 @@
 # STC Roadmap
 
+* Override remote changes
+* Revert local changes in addition to override
+
 * Device throughput with interval
 * Show full info about device/folder
   Include Recent changes from stats/folder

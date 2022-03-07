@@ -94,7 +94,7 @@ func dash() error {
 		}
 		fmt.Fprintf(t, "%v\t%v\t%5.1f%%\t%v\t%v\t%v\n",
 			f.Label,
-			fStatus(f.Paused, fs.State, fs.Errors),
+			fStatus(f.Paused, fs.State, fs.Errors, fs.ReceiveOnlyTotalItems),
 			co.Completion,
 			humanize.Bytes(fs.GlobalBytes),
 			humanize.Bytes(fs.LocalBytes),
@@ -259,7 +259,7 @@ func main() {
 
 func usage() {
 	o := flag.CommandLine.Output()
-	fmt.Fprintf(o, "stc [flags] [commands] [args]\n\nflags:\n")
+	fmt.Fprintf(o, "stc [flags] [commands]\n\nflags:\n")
 	flag.PrintDefaults()
 	fmt.Fprintln(o, `commands:
 	log           - print syncthing "recent" log
@@ -272,5 +272,6 @@ func usage() {
 	id            - print this node ID
 	reset_db      - reset the index
 	rescan        - rescan a folder or 'all'
-	override      - override local changes for a folder`)
+	override      - override local changes for a folder
+	`)
 }

@@ -48,13 +48,14 @@ type SysVersion struct {
 }
 
 type DbStatus struct {
-	GlobalBytes uint64 `json:"globalBytes"`
-	GlobalFiles uint64 `json:"globalFiles"`
-	LocalBytes  uint64 `json:"localBytes"`
-	LocalFiles  uint64 `json:"localFiles"`
-	NeedBytes   uint64 `json:"needBytes"`
-	State       string `json:"state"`
-	Errors      int    `json:"errors"`
+	GlobalBytes           uint64 `json:"globalBytes"`
+	GlobalFiles           uint64 `json:"globalFiles"`
+	LocalBytes            uint64 `json:"localBytes"`
+	LocalFiles            uint64 `json:"localFiles"`
+	NeedBytes             uint64 `json:"needBytes"`
+	State                 string `json:"state"`
+	Errors                uint64 `json:"errors"`
+	ReceiveOnlyTotalItems uint64 `json:"receiveOnlyTotalItems"`
 }
 
 type DbCompletion struct {

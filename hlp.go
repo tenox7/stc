@@ -63,12 +63,15 @@ func isConn(paused, conn bool, ID, myID string) string {
 	return "Offline"
 }
 
-func fStatus(paused bool, status string, err int) string {
+func fStatus(paused bool, status string, err, rola uint64) string {
 	if paused {
 		return "Paused"
 	}
 	if err > 0 {
-		return "errors"
+		return "Errors"
+	}
+	if rola > 0 {
+		return "LocChg"
 	}
 	return status
 }
