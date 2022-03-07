@@ -71,7 +71,7 @@ func fStatus(paused bool, status string, err, rola uint64) string {
 		return "Errors"
 	}
 	if rola > 0 {
-		return "LocChg"
+		return "LocAdds"
 	}
 	return status
 }

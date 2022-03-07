@@ -297,3 +297,14 @@ func Override(folderID string) error {
 	}
 	return nil
 }
+
+func Revert(folderID string) error {
+	r, err := c.R().SetQueryString("folder=" + folderID).Post("db/revert")
+	if err != nil {
+		return nil
+	}
+	if r.IsError() {
+		return apiError(r.Status())
+	}
+	return nil
+}

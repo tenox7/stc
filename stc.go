@@ -188,6 +188,17 @@ func override(fName string) error {
 	return api.Override(fID)
 }
 
+func revert(fName string) error {
+	fID, err := folderID(fName)
+	if err != nil {
+		return err
+	}
+	if fID == "" {
+		return fmt.Errorf("folder %q not found", fName)
+	}
+	return api.Revert(fID)
+}
+
 func folderErrors(fName string) error {
 	fID, err := folderID(fName)
 	if err != nil {
@@ -248,6 +259,8 @@ func main() {
 		err = rescan(flag.Arg(1))
 	case "override":
 		err = override(flag.Arg(1))
+	case "revert":
+		err = revert(flag.Arg(1))
 	default:
 		err = dash()
 	}
@@ -272,6 +285,7 @@ func usage() {
 	id            - print this node ID
 	reset_db      - reset the index
 	rescan        - rescan a folder or 'all'
-	override      - override local changes for a folder
+	override      - override remote changed for a send-only folder
+	revert        - revert local changes for a receive-only folder
 	`)
 }
