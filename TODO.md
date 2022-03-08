@@ -10,3 +10,4 @@
 * Wait for folder sync
 * Pause/resume folder/device
 * Reset DB to take folder name optionally
+* reduce bloat in api.go, make less, common functions

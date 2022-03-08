@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"path/filepath"
 	"runtime"
 
 	"github.com/go-resty/resty/v2"
@@ -79,13 +80,13 @@ type FolderErrors struct {
 	} `json:"errors"`
 }
 
-func IgnoreCertErrors() {
-	c.SetTransport(&http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}})
+func apiError(e interface{}) error {
+	pc, fi, li, _ := runtime.Caller(1)
+	return fmt.Errorf("%v (%v:%v): %v", runtime.FuncForPC(pc).Name(), filepath.Base(fi), li, e)
 }
 
-func apiError(e string) error {
-	pc, _, _, _ := runtime.Caller(1)
-	return fmt.Errorf("%s: %s", runtime.FuncForPC(pc).Name(), e)
+func IgnoreCertErrors() {
+	c.SetTransport(&http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}})
 }
 
 func SetApiKeyTarget(a, t string) error {
@@ -100,7 +101,7 @@ func SetApiKeyTarget(a, t string) error {
 func GetConfig() (StConfig, error) {
 	r, err := c.R().Get("config")
 	if err != nil {
-		return StConfig{}, err
+		return StConfig{}, apiError(err)
 	}
 	if r.IsError() {
 		return StConfig{}, apiError(r.Status())
@@ -109,7 +110,7 @@ func GetConfig() (StConfig, error) {
 	cfg := StConfig{}
 	err = json.Unmarshal(r.Body(), &cfg)
 	if err != nil {
-		return StConfig{}, err
+		return StConfig{}, apiError(err)
 	}
 
 	return cfg, nil
@@ -118,7 +119,7 @@ func GetConfig() (StConfig, error) {
 func GetFolderStatus(f string) (DbStatus, error) {
 	r, err := c.R().SetQueryString("folder=" + f).Get("db/status")
 	if err != nil {
-		return DbStatus{}, err
+		return DbStatus{}, apiError(err)
 	}
 	if r.IsError() {
 		return DbStatus{}, apiError(r.Status())
@@ -127,7 +128,7 @@ func GetFolderStatus(f string) (DbStatus, error) {
 	dbs := DbStatus{}
 	err = json.Unmarshal(r.Body(), &dbs)
 	if err != nil {
-		return DbStatus{}, err
+		return DbStatus{}, apiError(err)
 	}
 
 	return dbs, nil
@@ -136,7 +137,7 @@ func GetFolderStatus(f string) (DbStatus, error) {
 func GetCompletion(qStr string) (DbCompletion, error) {
 	r, err := c.R().SetQueryString(qStr).Get("db/completion")
 	if err != nil {
-		return DbCompletion{}, err
+		return DbCompletion{}, apiError(err)
 	}
 	if r.StatusCode() == 404 {
 		return DbCompletion{}, nil
@@ -148,7 +149,7 @@ func GetCompletion(qStr string) (DbCompletion, error) {
 	dbc := DbCompletion{}
 	err = json.Unmarshal(r.Body(), &dbc)
 	if err != nil {
-		return DbCompletion{}, err
+		return DbCompletion{}, apiError(err)
 	}
 
 	return dbc, nil
@@ -157,7 +158,7 @@ func GetCompletion(qStr string) (DbCompletion, error) {
 func GetConnection() (SysConn, error) {
 	r, err := c.R().Get("system/connections")
 	if err != nil {
-		return nil, err
+		return nil, apiError(err)
 	}
 	if r.IsError() {
 		return nil, apiError(r.Status())
@@ -166,7 +167,7 @@ func GetConnection() (SysConn, error) {
 	co := SysConnections{}
 	err = json.Unmarshal(r.Body(), &co)
 	if err != nil {
-		return nil, err
+		return nil, apiError(err)
 	}
 
 	return co.Connections, nil
@@ -175,7 +176,7 @@ func GetConnection() (SysConn, error) {
 func GetSysStatus() (SysStatus, error) {
 	r, err := c.R().Get("system/status")
 	if err != nil {
-		return SysStatus{}, err
+		return SysStatus{}, apiError(err)
 	}
 	if r.IsError() {
 		return SysStatus{}, apiError(r.Status())
@@ -184,7 +185,7 @@ func GetSysStatus() (SysStatus, error) {
 	st := SysStatus{}
 	err = json.Unmarshal(r.Body(), &st)
 	if err != nil {
-		return SysStatus{}, err
+		return SysStatus{}, apiError(err)
 	}
 
 	return st, nil
@@ -193,7 +194,7 @@ func GetSysStatus() (SysStatus, error) {
 func GetSysVersion() (SysVersion, error) {
 	r, err := c.R().Get("system/version")
 	if err != nil {
-		return SysVersion{}, err
+		return SysVersion{}, apiError(err)
 	}
 	if r.IsError() {
 		return SysVersion{}, apiError(r.Status())
@@ -202,7 +203,7 @@ func GetSysVersion() (SysVersion, error) {
 	ve := SysVersion{}
 	err = json.Unmarshal(r.Body(), &ve)
 	if err != nil {
-		return SysVersion{}, err
+		return SysVersion{}, apiError(err)
 	}
 
 	return ve, nil
@@ -211,7 +212,7 @@ func GetSysVersion() (SysVersion, error) {
 func GetLogTxt() (string, error) {
 	r, err := c.R().Get("system/log.txt")
 	if err != nil {
-		return "", err
+		return "", apiError(err)
 	}
 	if r.IsError() {
 		return "", apiError(r.Status())
@@ -220,24 +221,42 @@ func GetLogTxt() (string, error) {
 }
 
 func Shutdown() error {
-	_, err := c.R().Post("system/shutdown")
-	return err
+	r, err := c.R().Post("system/shutdown")
+	if err != nil {
+		return apiError(err)
+	}
+	if r.IsError() {
+		return apiError(r.Status())
+	}
+	return nil
 }
 
 func Restart() error {
-	_, err := c.R().Post("system/restart")
-	return err
+	r, err := c.R().Post("system/restart")
+	if err != nil {
+		return apiError(err)
+	}
+	if r.IsError() {
+		return apiError(r.Status())
+	}
+	return nil
 }
 
 func ResetDB() error {
-	_, err := c.R().Post("system/reset")
-	return err
+	r, err := c.R().Post("system/reset")
+	if err != nil {
+		return apiError(err)
+	}
+	if r.IsError() {
+		return apiError(r.Status())
+	}
+	return nil
 }
 
 func GetSysErrors() (SysErrors, error) {
 	r, err := c.R().Get("system/error")
 	if err != nil {
-		return SysErrors{}, err
+		return SysErrors{}, apiError(err)
 	}
 	if r.IsError() {
 		return SysErrors{}, apiError(r.Status())
@@ -246,25 +265,37 @@ func GetSysErrors() (SysErrors, error) {
 	se := SysErrors{}
 	err = json.Unmarshal(r.Body(), &se)
 	if err != nil {
-		return SysErrors{}, err
+		return SysErrors{}, apiError(err)
 	}
 	return se, nil
 }
 
 func ClearErrors() error {
-	_, err := c.R().Post("system/error/clear")
-	return err
+	r, err := c.R().Post("system/error/clear")
+	if err != nil {
+		return apiError(err)
+	}
+	if r.IsError() {
+		return apiError(r.Status())
+	}
+	return nil
 }
 
 func PostError(msg string) error {
-	_, err := c.R().SetBody(msg).Post("system/error")
-	return err
+	r, err := c.R().SetBody(msg).Post("system/error")
+	if err != nil {
+		return apiError(err)
+	}
+	if r.IsError() {
+		return apiError(r.Status())
+	}
+	return nil
 }
 
 func GetFolderErrors(folderID string) (FolderErrors, error) {
 	r, err := c.R().SetQueryString("folder=" + folderID).Get("folder/errors")
 	if err != nil {
-		return FolderErrors{}, err
+		return FolderErrors{}, apiError(err)
 	}
 	if r.IsError() {
 		return FolderErrors{}, apiError(r.Status())
@@ -273,7 +304,7 @@ func GetFolderErrors(folderID string) (FolderErrors, error) {
 	fe := FolderErrors{}
 	err = json.Unmarshal(r.Body(), &fe)
 	if err != nil {
-		return FolderErrors{}, err
+		return FolderErrors{}, apiError(err)
 	}
 	return fe, nil
 }
@@ -281,7 +312,7 @@ func GetFolderErrors(folderID string) (FolderErrors, error) {
 func Rescan(folderID string) error {
 	r, err := c.R().SetQueryString("folder=" + folderID).Post("db/scan")
 	if err != nil {
-		return nil
+		return apiError(err)
 	}
 	if r.IsError() {
 		return apiError(r.Status())
@@ -292,7 +323,7 @@ func Rescan(folderID string) error {
 func Override(folderID string) error {
 	r, err := c.R().SetQueryString("folder=" + folderID).Post("db/override")
 	if err != nil {
-		return nil
+		return apiError(err)
 	}
 	if r.IsError() {
 		return apiError(r.Status())
@@ -303,7 +334,7 @@ func Override(folderID string) error {
 func Revert(folderID string) error {
 	r, err := c.R().SetQueryString("folder=" + folderID).Post("db/revert")
 	if err != nil {
-		return nil
+		return apiError(err)
 	}
 	if r.IsError() {
 		return apiError(r.Status())
