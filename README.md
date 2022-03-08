@@ -3,7 +3,8 @@
 Stc is a command line tool for [Syncthing](https://syncthing.net/).
 It can be used to quickly check status of Syncthing from a terminal / command line
 without need of a Web Browser. For example on a remote machine over ssh, without port
-forwarding or if you have large number of machines to query.
+forwarding or if you have large number of machines to query. Also run from a script,
+crontab, scheduled task, etc.
 
 ```
 $ stc
@@ -22,15 +23,6 @@ jakob-home      false     true   100.0%  89 MB     447 kB
 backup-nas      false     true   100.0%  6.3 kB    7.0 kB
 *homenas        false     true   100.0%  0 B       0 B
 ```
-
-## Functionality
-
-Stc doesn't attempt to be a fully fledged CLI with all functions from the Web UI.
-Instead it aims to have rudimentary functionality for operation on remote devices.
-
-Currently supported is a basic dashboard with status and a number of commands to
-perform basic tasks like restart, shutdown, rescan, override and revert, print and
-clear errors, etc.
 
 ## Usage
 
