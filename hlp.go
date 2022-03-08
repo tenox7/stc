@@ -15,20 +15,20 @@ func usage() {
 	o := flag.CommandLine.Output()
 	fmt.Fprintf(o, "stc [flags] [commands]\n\nflags:\n")
 	flag.PrintDefaults()
-	fmt.Fprintln(o, `commands:
-	log           - print syncthing "recent" log
-	restart       - restart syncthing daemon
-	shutdown      - shutdown syncthing daemon
-	errors        - print errors visible in web UI
-	clear_errors  - clear errors in the web UI
-	post_error    - posts a custom error message in the web UI
-	folder_errors - prints folder errors from scan or pull
-	id            - print ID of this node
-	reset_db      - reset the database / file index
-	rescan        - rescan a folder or 'all'
-	override      - override remote changed for a send-only folder (OoSync)
-	revert        - revert local changes for a receive-only folder (LocAdds)
-	`)
+	fmt.Fprintf(o, "\ncommands:\n"+
+		"  log           - print syncthing 'recent' log\n"+
+		"  restart       - restart syncthing daemon\n"+
+		"  shutdown      - shutdown syncthing daemon\n"+
+		"  errors        - print errors visible in web UI\n"+
+		"  clear_errors  - clear errors in the web UI\n"+
+		"  post_error    - posts a custom error message in the web UI\n"+
+		"  folder_errors - prints folder errors from scan or pull\n"+
+		"  id            - print ID of this node\n"+
+		"  reset_db      - reset the database / file index\n"+
+		"  rescan        - rescan a folder or 'all'\n"+
+		"  override      - override remote changed for a send-only folder (OoSync)\n"+
+		"  revert        - revert local changes for a receive-only folder (LocAdds)\n",
+	)
 }
 
 func cfg(apiKey, target, homeDir string) (string, string, error) {
