@@ -2,12 +2,34 @@ package main
 
 import (
 	"encoding/xml"
+	"flag"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 
 	"github.com/tenox7/stc/api"
 )
+
+func usage() {
+	o := flag.CommandLine.Output()
+	fmt.Fprintf(o, "stc [flags] [commands]\n\nflags:\n")
+	flag.PrintDefaults()
+	fmt.Fprintln(o, `commands:
+	log           - print syncthing "recent" log
+	restart       - restart syncthing daemon
+	shutdown      - shutdown syncthing daemon
+	errors        - print errors visible in web UI
+	clear_errors  - clear errors in the web UI
+	post_error    - posts a custom error message in the web UI
+	folder_errors - prints folder errors from scan or pull
+	id            - print ID of this node
+	reset_db      - reset the database / file index
+	rescan        - rescan a folder or 'all'
+	override      - override remote changed for a send-only folder (OoSync)
+	revert        - revert local changes for a receive-only folder (LocAdds)
+	`)
+}
 
 func cfg(apiKey, target, homeDir string) (string, string, error) {
 	if apiKey == "" {
