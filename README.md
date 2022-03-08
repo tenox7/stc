@@ -1,7 +1,7 @@
 # STC - Syncthing Cli
 
 Stc is a command line tool for [Syncthing](https://syncthing.net/).
-It can be used to quicky check status of Syncthing from a terminal / command line
+It can be used to quickly check status of Syncthing from a terminal / command line
 without need of a Web Browser. For example on a remote machine over ssh, without port
 forwarding or if you have large number of machines to query.
 
@@ -22,6 +22,15 @@ jakob-home      false     true   100.0%  89 MB     447 kB
 backup-nas      false     true   100.0%  6.3 kB    7.0 kB
 *homenas        false     true   100.0%  0 B       0 B
 ```
+
+## Functionality
+
+Stc doesn't attempt to be a fully fledged CLI with all functions from the Web UI.
+Instead it aims to have rudimentary functionality for operation on remote devices.
+
+Currently supported is a basic dashboard with status and a number of commands to
+perform basic tasks like restart, shutdown, rescan, override and revert, print and
+clear errors, etc.
 
 ## Usage
 
@@ -47,7 +56,7 @@ If you place `stc` binary in the Syncthing home folder or specify `--homedir`
 flag, it will try to obtain the right values from `config.xml`.
 
 If you use TLS/SSL/https without valid certificate you can use the flag
-`--ignore_cert_errors` to supress the errors. This is considered very unsecure.
+`--ignore_cert_errors` to suppress the errors. This is considered very insecure.
 
 ## Flags
 
@@ -62,17 +71,18 @@ If you use TLS/SSL/https without valid certificate you can use the flag
 ## Arguments / Commands
 
 ```text
-	log           - print syncthing "recent" log
-	restart       - restart syncthing daemon
-	shutdown      - shutdown syncthing daemon
-	errors        - print errors visible in web UI
-	clear_errors  - clear errors in the web UI
-	post_error    - posts a custom error message in the web UI
-	folder_errors - prints folder errors from scan or pull
-	id            - print this node ID
-	reset_db      - reset the index
-	rescan        - rescan a folder or 'all'
-	override      - override local changes for a folder
+  log           - print syncthing 'recent' log
+  restart       - restart syncthing daemon
+  shutdown      - shutdown syncthing daemon
+  errors        - print errors visible in web UI
+  clear_errors  - clear errors in the web UI
+  post_error    - posts a custom error message in the web UI
+  folder_errors - prints folder errors from scan or pull
+  id            - print ID of this node
+  reset_db      - reset the database / file index
+  rescan        - rescan a folder or 'all'
+  override      - override remote changed for a send-only folder (OoSync)
+  revert        - revert local changes for a receive-only folder (LocAdds)
 ```
 
 ## Download binaries
