@@ -19,6 +19,7 @@ type StConfig struct {
 		ID     string `json:"id"`
 		Label  string `json:"label"`
 		Paused bool   `json:"paused"`
+		Type   string `json:"type"`
 	} `json:"folders"`
 
 	Devices []struct {
@@ -53,6 +54,7 @@ type DbStatus struct {
 	LocalBytes            uint64 `json:"localBytes"`
 	LocalFiles            uint64 `json:"localFiles"`
 	NeedBytes             uint64 `json:"needBytes"`
+	NeedTotalItems        uint64 `json:"needTotalItems"`
 	State                 string `json:"state"`
 	Errors                uint64 `json:"errors"`
 	ReceiveOnlyTotalItems uint64 `json:"receiveOnlyTotalItems"`

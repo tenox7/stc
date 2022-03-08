@@ -63,17 +63,20 @@ func isConn(paused, conn bool, ID, myID string) string {
 	return "Offline"
 }
 
-func fStatus(paused bool, status string, err, loChg uint64) string {
+func fStatus(paused bool, ty, st string, err, loChg, needItms uint64) string {
 	if paused {
 		return "Paused"
 	}
 	if err > 0 {
 		return "Errors"
 	}
-	if loChg > 0 {
+	if ty == "sendonly" && needItms > 0 {
+		return "OoSync"
+	}
+	if ty == "receiveonly" && loChg > 0 {
 		return "LocAdds"
 	}
-	return status
+	return st
 }
 
 func folderID(fName string) (string, error) {

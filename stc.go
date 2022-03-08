@@ -94,7 +94,7 @@ func dash() error {
 		}
 		fmt.Fprintf(t, "%v\t%v\t%5.1f%%\t%v\t%v\t%v\n",
 			f.Label,
-			fStatus(f.Paused, fs.State, fs.Errors, fs.ReceiveOnlyTotalItems),
+			fStatus(f.Paused, f.Type, fs.State, fs.Errors, fs.ReceiveOnlyTotalItems, fs.NeedTotalItems),
 			co.Completion,
 			humanize.Bytes(fs.GlobalBytes),
 			humanize.Bytes(fs.LocalBytes),
@@ -282,10 +282,10 @@ func usage() {
 	clear_errors  - clear errors in the web UI
 	post_error    - posts a custom error message in the web UI
 	folder_errors - prints folder errors from scan or pull
-	id            - print this node ID
-	reset_db      - reset the index
+	id            - print ID of this node
+	reset_db      - reset the database / file index
 	rescan        - rescan a folder or 'all'
-	override      - override remote changed for a send-only folder
-	revert        - revert local changes for a receive-only folder
+	override      - override remote changed for a send-only folder (OoSync)
+	revert        - revert local changes for a receive-only folder (LocAdds)
 	`)
 }
