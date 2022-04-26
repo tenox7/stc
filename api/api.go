@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"runtime"
+	"strconv"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -132,6 +133,17 @@ func GetFolderStatus(f string) (DbStatus, error) {
 	}
 
 	return dbs, nil
+}
+
+func PauseFolder(f string, p bool) error {
+	r, err := c.R().SetBody(`{ "paused": ` + strconv.FormatBool(p) + `}`).Patch("config/folders/" + f)
+	if err != nil {
+		return apiError(err)
+	}
+	if r.IsError() {
+		return apiError(r.Status())
+	}
+	return nil
 }
 
 func GetCompletion(qStr string) (DbCompletion, error) {

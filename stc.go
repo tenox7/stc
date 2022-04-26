@@ -261,6 +261,10 @@ func main() {
 		err = override(flag.Arg(1))
 	case "revert":
 		err = revert(flag.Arg(1))
+	case "folder_pause":
+		err = api.PauseFolder(flag.Arg(1), true)
+	case "folder_resume":
+		err = api.PauseFolder(flag.Arg(1), false)
 	default:
 		err = dash()
 	}

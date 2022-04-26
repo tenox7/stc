@@ -23,6 +23,8 @@ func usage() {
 		"  clear_errors  - clear errors in the web UI\n"+
 		"  post_error    - posts a custom error message in the web UI\n"+
 		"  folder_errors - prints folder errors from scan or pull\n"+
+		"  folder_pause  - pause specified folder\n"+
+		"  folder_resume - unpause specified folder\n"+
 		"  id            - print ID of this node\n"+
 		"  reset_db      - reset the database / file index\n"+
 		"  rescan        - rescan a folder or 'all'\n"+
