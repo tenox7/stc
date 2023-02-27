@@ -42,12 +42,16 @@ func cfg(apiKey, target, homeDir string) (string, string, error) {
 	}
 
 	if homeDir == "" {
-		homeDir = filepath.Dir(os.Args[0])
+		cfgDir, err := os.UserConfigDir()
+		if err != nil {
+			return "", "", err
+		}
+		homeDir = filepath.Join(cfgDir, "syncthing")
 	}
 
 	var err error
 	var f []byte
-	f, err = ioutil.ReadFile(homeDir + string(os.PathSeparator) + "/config.xml")
+	f, err = ioutil.ReadFile(filepath.Join(homeDir, "config.xml"))
 	if err != nil {
 		return "", "", err
 	}
