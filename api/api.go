@@ -44,6 +44,7 @@ type SysConnections struct {
 type SysStatus struct {
 	MyID   string `json:"myID"`
 	Uptime int64  `json:"uptime"`
+	Ram uint64 `json:"sys"`
 }
 
 type SysVersion struct {
