@@ -4,7 +4,6 @@ import (
 	"encoding/xml"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -33,7 +32,47 @@ func usage() {
 	)
 }
 
+func findCfgFile(homeDir string) (string, error) {
+	getCfgFile := func(dir string) (string, error) {
+		_, err := os.Stat(dir)
+		if err != nil {
+			return "", err
+		}
+		ret := filepath.Join(dir, "config.xml")
+		_, err = os.Stat(ret)
+		if err != nil {
+			return "", err
+		}
+		return ret, nil
+	}
+
+
+	if homeDir != "" {
+		return getCfgFile(homeDir)
+	}
+
+	// try user config dir
+	userCfgDir, err := os.UserConfigDir()
+	if err != nil {
+		return "", err
+	}
+	homeDir = filepath.Join(userCfgDir, "syncthing")
+	cfgFile, err := getCfgFile(homeDir)
+	if err == nil {
+		return cfgFile, nil
+	}
+
+	// fall back to path of argv[0]
+	homeDir, err = os.Executable()
+	if err != nil {
+		return "", err
+	}
+	homeDir = filepath.Dir(homeDir)
+	return getCfgFile(homeDir)
+}
+
 func cfg(apiKey, target, homeDir string) (string, string, error) {
+	var err error
 	if apiKey == "" {
 		apiKey = os.Getenv("APIKEY")
 	}
@@ -41,13 +80,13 @@ func cfg(apiKey, target, homeDir string) (string, string, error) {
 		return apiKey, target, nil
 	}
 
-	if homeDir == "" {
-		homeDir = filepath.Dir(os.Args[0])
+	cfgFile, err := findCfgFile(homeDir)
+	if err != nil {
+		return "", "", err
 	}
 
-	var err error
 	var f []byte
-	f, err = ioutil.ReadFile(homeDir + string(os.PathSeparator) + "/config.xml")
+	f, err = os.ReadFile(cfgFile)
 	if err != nil {
 		return "", "", err
 	}

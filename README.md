@@ -32,9 +32,14 @@ $ stc [flags] [commands]
 
 ### Easy Mode
 
-Place `stc` binary in Syncthing home directory and run it from there, or
-specify it with `--homedir=/path..`. Stc will try to find the URL and API
-Key on it's own.
+Run `stc` and it will by default look for the Syncthing config file in a
+`syncthing` folder in your user configuration directory. This is usually
+`~/.config/syncthing` on Linux, `~/Library/Application Support/Syncthing` on
+macOS and `%APPDATA%\Syncthing` on Windows.
+
+If SyncThing isn't installed there, you can also place `stc` binary in Syncthing
+home directory and run it from there, or specify it with `--homedir=/path..`.
+Stc will try to find the URL and API Key on it's own.
 
 ### Advanced / Remote Mode
 
