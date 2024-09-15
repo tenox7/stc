@@ -18,6 +18,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -127,6 +128,143 @@ func dash() error {
 	}
 
 	t.Flush()
+
+	return nil
+}
+
+type SyncFolder struct {
+	Name   string  `json:"folderName"`
+	Status string  `json:"status"`
+	Sync   float64 `json:"syncPercentDone"`
+	Global uint64  `json:"globalBytes"`
+	Local  uint64  `json:"localBytes"`
+	Needs  uint64  `json:"missingBytes"`
+}
+
+func dumpFolderJson() error {
+	dumpErrors(true)
+
+	cfg, err := api.GetConfig()
+	if err != nil {
+		return err
+	}
+
+	st, err := api.GetSysStatus()
+	if err != nil {
+		return err
+	}
+
+	myName := ""
+	for _, n := range cfg.Devices {
+		if n.DeviceID != st.MyID {
+			continue
+		}
+		myName = n.Name
+	}
+	if myName == "" {
+		return fmt.Errorf("unable to find this device name")
+	}
+
+	folders := []SyncFolder{}
+
+	for _, f := range cfg.Folders {
+		fs, err := api.GetFolderStatus(f.ID)
+		if err != nil {
+			return err
+		}
+		co, err := api.GetCompletion("folder=" + f.ID)
+		if err != nil {
+			return err
+		}
+		folders = append(folders,
+			SyncFolder{
+				Name:   f.Label,
+				Status: fStatus(f.Paused, f.Type, fs.State, fs.Errors, fs.ReceiveOnlyTotalItems, fs.NeedTotalItems),
+				Sync:   co.Completion,
+				Global: fs.GlobalBytes,
+				Local:  fs.LocalBytes,
+				Needs:  fs.NeedBytes,
+			})
+	}
+
+	jsonData, err := json.Marshal(folders)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return err
+	}
+
+	fmt.Println(string(jsonData))
+
+	return nil
+}
+
+type SyncDevice struct {
+	Name     string  `json:"deviceName"`
+	Status   string  `json:"status"`
+	Sync     float64 `json:"syncPercentDone"`
+	Download uint64  `json:"downloadedBytes"`
+	Upload   uint64  `json:"uploadedBytes"`
+	Needs    uint64  `json:"missingBytes"`
+}
+
+func dumpDeviceJson() error {
+	dumpErrors(true)
+
+	cfg, err := api.GetConfig()
+	if err != nil {
+		return err
+	}
+
+	st, err := api.GetSysStatus()
+	if err != nil {
+		return err
+	}
+
+	myName := ""
+	for _, n := range cfg.Devices {
+		if n.DeviceID != st.MyID {
+			continue
+		}
+		myName = n.Name
+	}
+	if myName == "" {
+		return fmt.Errorf("unable to find this device name")
+	}
+
+	cons, err := api.GetConnection()
+	if err != nil {
+		return err
+	}
+
+	devices := []SyncDevice{}
+
+	for _, d := range cfg.Devices {
+		co, err := api.GetCompletion("device=" + d.DeviceID)
+		if err != nil {
+			return err
+		}
+
+		if d.Name == myName {
+			d.Name = "*" + d.Name
+		}
+		devices = append(devices,
+			SyncDevice{
+				Name:     d.Name,
+				Status:   isConn(d.Paused, cons[d.DeviceID].Connected, d.DeviceID, st.MyID),
+				Sync:     co.Completion,
+				Download: cons[d.DeviceID].InBytesTotal,
+				Upload:   cons[d.DeviceID].OutBytesTotal,
+				Needs:    co.NeedBytes,
+			})
+	}
+
+	jsonData, err := json.Marshal(devices)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return err
+	}
+
+	fmt.Println(string(jsonData))
 
 	return nil
 }
@@ -265,6 +403,10 @@ func main() {
 		err = api.PauseFolder(flag.Arg(1), true)
 	case "folder_resume":
 		err = api.PauseFolder(flag.Arg(1), false)
+	case "device_json":
+		err = dumpDeviceJson()
+	case "folder_json":
+		err = dumpFolderJson()
 	default:
 		err = dash()
 	}
