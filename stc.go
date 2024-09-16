@@ -39,6 +39,24 @@ var (
 	igCert  = flag.Bool("ignore_cert_errors", false, "ignore https/ssl/tls cert errors")
 )
 
+type SyncFolder struct {
+	Name   string  `json:"folderName"`
+	Status string  `json:"status"`
+	Sync   float64 `json:"syncPercentDone"`
+	Global uint64  `json:"globalBytes"`
+	Local  uint64  `json:"localBytes"`
+	Needs  uint64  `json:"missingBytes"`
+}
+
+type SyncDevice struct {
+	Name     string  `json:"deviceName"`
+	Status   string  `json:"status"`
+	Sync     float64 `json:"syncPercentDone"`
+	Download uint64  `json:"downloadedBytes"`
+	Upload   uint64  `json:"uploadedBytes"`
+	Needs    uint64  `json:"missingBytes"`
+}
+
 func dash() error {
 	dumpErrors(true)
 
@@ -132,26 +150,12 @@ func dash() error {
 	return nil
 }
 
-type SyncFolder struct {
-	Name   string  `json:"folderName"`
-	Status string  `json:"status"`
-	Sync   float64 `json:"syncPercentDone"`
-	Global uint64  `json:"globalBytes"`
-	Local  uint64  `json:"localBytes"`
-	Needs  uint64  `json:"missingBytes"`
-}
-
-func dumpFolderJson() error {
+func getFolderInfoAsStruct(cfg api.StConfig) ([]SyncFolder, error) {
 	dumpErrors(true)
-
-	cfg, err := api.GetConfig()
-	if err != nil {
-		return err
-	}
 
 	st, err := api.GetSysStatus()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	myName := ""
@@ -162,7 +166,7 @@ func dumpFolderJson() error {
 		myName = n.Name
 	}
 	if myName == "" {
-		return fmt.Errorf("unable to find this device name")
+		return nil, fmt.Errorf("unable to find this device name")
 	}
 
 	folders := []SyncFolder{}
@@ -170,11 +174,11 @@ func dumpFolderJson() error {
 	for _, f := range cfg.Folders {
 		fs, err := api.GetFolderStatus(f.ID)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		co, err := api.GetCompletion("folder=" + f.ID)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		folders = append(folders,
 			SyncFolder{
@@ -187,37 +191,14 @@ func dumpFolderJson() error {
 			})
 	}
 
-	jsonData, err := json.Marshal(folders)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return err
-	}
-
-	fmt.Println(string(jsonData))
-
-	return nil
+	return folders, nil
 }
 
-type SyncDevice struct {
-	Name     string  `json:"deviceName"`
-	Status   string  `json:"status"`
-	Sync     float64 `json:"syncPercentDone"`
-	Download uint64  `json:"downloadedBytes"`
-	Upload   uint64  `json:"uploadedBytes"`
-	Needs    uint64  `json:"missingBytes"`
-}
-
-func dumpDeviceJson() error {
-	dumpErrors(true)
-
-	cfg, err := api.GetConfig()
-	if err != nil {
-		return err
-	}
+func getDeviceInfoAsStruct(cfg api.StConfig) ([]SyncDevice, error) {
 
 	st, err := api.GetSysStatus()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	myName := ""
@@ -228,12 +209,12 @@ func dumpDeviceJson() error {
 		myName = n.Name
 	}
 	if myName == "" {
-		return fmt.Errorf("unable to find this device name")
+		return nil, fmt.Errorf("unable to find this device name")
 	}
 
 	cons, err := api.GetConnection()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	devices := []SyncDevice{}
@@ -241,7 +222,7 @@ func dumpDeviceJson() error {
 	for _, d := range cfg.Devices {
 		co, err := api.GetCompletion("device=" + d.DeviceID)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		if d.Name == myName {
@@ -258,14 +239,40 @@ func dumpDeviceJson() error {
 			})
 	}
 
-	jsonData, err := json.Marshal(devices)
+	return devices, nil
+}
+
+func dumpDashAsJson() error {
+
+	cfg, err := api.GetConfig()
+	if err != nil {
+		return err
+	}
+
+	devices, err := getDeviceInfoAsStruct(cfg)
+	if err != nil {
+		return err
+	}
+	folders, err := getFolderInfoAsStruct(cfg)
+	if err != nil {
+		return err
+	}
+
+	output := struct {
+		Folders []SyncFolder `json:"folders"`
+		Devices []SyncDevice `json:"devices"`
+	}{
+		Folders: folders,
+		Devices: devices,
+	}
+
+	jsonData, err := json.Marshal(output)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return err
 	}
 
 	fmt.Println(string(jsonData))
-
 	return nil
 }
 
@@ -403,10 +410,8 @@ func main() {
 		err = api.PauseFolder(flag.Arg(1), true)
 	case "folder_resume":
 		err = api.PauseFolder(flag.Arg(1), false)
-	case "device_json":
-		err = dumpDeviceJson()
-	case "folder_json":
-		err = dumpFolderJson()
+	case "json_dump":
+		err = dumpDashAsJson()
 	default:
 		err = dash()
 	}
