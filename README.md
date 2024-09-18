@@ -80,6 +80,7 @@ If you use TLS/SSL/https without valid certificate you can use the flag
   rescan        - rescan a folder or 'all'
   override      - override remote changed for a send-only folder (OoSync)
   revert        - revert local changes for a receive-only folder (LocAdds)
+  json_dump     - prints a json object with device and folder info, for easier parsing in scripts 
 ```
 
 ## Download binaries
