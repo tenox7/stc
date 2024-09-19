@@ -61,10 +61,10 @@ If you use TLS/SSL/https without valid certificate you can use the flag
 Examples
 
 List all folders which are actively syncing
-`jq '.folders[] | select(.status | contains("idle") | not)'`
+`stc json_dump | jq '.folders[] | select(.status | contains("idle") | not)'`
 
 Display the device with the greatest count of uploaded bytes:
-`jq '.devices | sort_by(.uploadedBytes) | last'`
+`stc json_dump | jq '.devices | sort_by(.uploadedBytes) | last'`
 
 ## Flags
 
