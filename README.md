@@ -56,7 +56,7 @@ If you use TLS/SSL/https without valid certificate you can use the flag
 `--ignore_cert_errors` to suppress the errors. This is considered very insecure.
 
 ### JSON output
-`stc dump_json` prints the same folder and device info as the default command, but in JSON format for more reliable use in scripts. `jq` is a great option for processing output. 
+`stc json_dump` prints the same folder and device info as the default command, but in JSON format for more reliable use in scripts. `jq` is a great option for processing output. 
 
 Examples
 
