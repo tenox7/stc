@@ -100,6 +100,5 @@ See [Releases](https://github.com/tenox7/stc/releases)
 
 ## Legal
 
-* Copyright 2022 Google LLC
+* Copyright 2024 Antoni Sawicki et al
 * Licensed under Apache 2.0
-* This is not an official Google product
