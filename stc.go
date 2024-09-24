@@ -348,6 +348,7 @@ func folderErrors(fName string) error {
 }
 
 func main() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	flag.Usage = usage
 	flag.Parse()
 
