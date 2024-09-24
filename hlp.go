@@ -41,11 +41,10 @@ func findCfgFile(homeDir string) (string, error) {
 		ret := filepath.Join(dir, "config.xml")
 		_, err = os.Stat(ret)
 		if err != nil {
-			return "", err
+			return "", fmt.Errorf("unable to find config file: %v", err)
 		}
 		return ret, nil
 	}
-
 
 	if homeDir != "" {
 		return getCfgFile(homeDir)
