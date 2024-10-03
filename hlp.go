@@ -28,7 +28,8 @@ func usage() {
 		"  reset_db      - reset the database / file index\n"+
 		"  rescan        - rescan a folder or 'all'\n"+
 		"  override      - override remote changed for a send-only folder (OoSync)\n"+
-		"  revert        - revert local changes for a receive-only folder (LocAdds)\n",
+		"  revert        - revert local changes for a receive-only folder (LocAdds)\n"+
+		"  json_dump     - prints a json object with device and folder info, for easier parsing in scripts\n",
 	)
 }
 
