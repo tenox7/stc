@@ -33,6 +33,10 @@ func usage() {
 	)
 }
 
+func printVer() {
+	fmt.Printf("stc version %v\n", GitTag)
+}
+
 func findCfgFile(homeDir string) (string, error) {
 	getCfgFile := func(dir string) (string, error) {
 		_, err := os.Stat(dir)

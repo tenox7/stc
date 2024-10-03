@@ -21,6 +21,8 @@ var (
 	target  = flag.String("target", "", "Syncthing Target URL")
 	homeDir = flag.String("homedir", "", "Syncthing Home Directory, used to get API Key and Target")
 	igCert  = flag.Bool("ignore_cert_errors", false, "ignore https/ssl/tls cert errors")
+	verFlag = flag.Bool("version", false, "print version")
+	GitTag  string
 )
 
 type SyncFolder struct {
@@ -351,6 +353,10 @@ func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	flag.Usage = usage
 	flag.Parse()
+	if *verFlag {
+		printVer()
+		os.Exit(0)
+	}
 
 	a, t, err := cfg(*apiKey, *target, *homeDir)
 	if err != nil {
