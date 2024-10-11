@@ -20,6 +20,8 @@ var (
 	apiKey  = flag.String("apikey", "", "Syncthing API Key")
 	target  = flag.String("target", "", "Syncthing Target URL")
 	homeDir = flag.String("homedir", "", "Syncthing Home Directory, used to get API Key and Target")
+	limit   = flag.Int("limit", -1, "Limit of items to return when returning lists")
+	since   = flag.Int("since", 0, "ID of item to start from when returning lists")
 	igCert  = flag.Bool("ignore_cert_errors", false, "ignore https/ssl/tls cert errors")
 	verFlag = flag.Bool("version", false, "print version")
 	GitTag  string
@@ -349,6 +351,15 @@ func folderErrors(fName string) error {
 	return nil
 }
 
+func events(event_types string, limit int, since int) error {
+	events, err := api.Events(event_types, limit, since)
+	if err != nil {
+		return err
+	}
+	fmt.Println(events)
+	return nil
+}
+
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	flag.Usage = usage
@@ -401,6 +412,8 @@ func main() {
 		err = api.PauseFolder(flag.Arg(1), true)
 	case "folder_resume":
 		err = api.PauseFolder(flag.Arg(1), false)
+	case "events":
+		err = events(flag.Arg(1), *limit, *since)
 	case "json_dump":
 		err = dumpDashAsJson()
 	default:

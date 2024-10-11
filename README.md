@@ -56,7 +56,8 @@ If you use TLS/SSL/https without valid certificate you can use the flag
 `--ignore_cert_errors` to suppress the errors. This is considered very insecure.
 
 ### JSON output
-`stc json_dump` prints the same folder and device info as the default command, but in JSON format for more reliable use in scripts. `jq` is a great option for processing output. 
+
+`stc json_dump` prints the same folder and device info as the default command, but in JSON format for more reliable use in scripts. `jq` is a great option for processing output.
 
 Examples
 
@@ -74,24 +75,28 @@ Display the device with the greatest count of uploaded bytes:
   --homedir             - Path of Syncthing home directory, if specified stc
                           will try to find apikey and target from config.xml
   --ignore_cert_errors  - Ignore cert errors while using https/SSL/TLS
+  --since               - Limit of items to return when returning lists
+  --limit               - ID of item to start from when returning lists
 ```
 
 ## Arguments / Commands
 
 ```text
-  log           - print syncthing 'recent' log
-  restart       - restart syncthing daemon
-  shutdown      - shutdown syncthing daemon
-  errors        - print errors visible in web UI
-  clear_errors  - clear errors in the web UI
-  post_error    - posts a custom error message in the web UI
-  folder_errors - prints folder errors from scan or pull
-  id            - print ID of this node
-  reset_db      - reset the database / file index
-  rescan        - rescan a folder or 'all'
-  override      - override remote changed for a send-only folder (OoSync)
-  revert        - revert local changes for a receive-only folder (LocAdds)
-  json_dump     - prints a json object with device and folder info, for easier parsing in scripts 
+  log            - print syncthing 'recent' log
+  restart        - restart syncthing daemon
+  shutdown       - shutdown syncthing daemon
+  errors         - print errors visible in web UI
+  clear_errors   - clear errors in the web UI
+  post_error     - posts a custom error message in the web UI
+  folder_errors  - prints folder errors from scan or pull
+  id             - print ID of this node
+  reset_db       - reset the database / file index
+  rescan         - rescan a folder or 'all'
+  override       - override remote changed for a send-only folder (OoSync)
+  revert         - revert local changes for a receive-only folder (LocAdds)
+  events [types] - prints a json list of latest events, [types] is a comma-delimited list of events
+                   see https://docs.syncthing.net/dev/events.html#event-types for a list of event types
+  json_dump      - prints a json object with device and folder info, for easier parsing in scripts
 ```
 
 ## Download binaries
@@ -100,5 +105,5 @@ See [Releases](https://github.com/tenox7/stc/releases)
 
 ## Legal
 
-* Copyright 2024 Antoni Sawicki et al
-* Licensed under Apache 2.0
+- Copyright 2024 Antoni Sawicki et al
+- Licensed under Apache 2.0
