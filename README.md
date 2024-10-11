@@ -99,7 +99,11 @@ Display the device with the greatest count of uploaded bytes:
   json_dump      - prints a json object with device and folder info, for easier parsing in scripts
 ```
 
-## Download binaries
+## Installation
+
+`go install github.com/tenox7/stc@latest`
+
+### Download binaries
 
 See [Releases](https://github.com/tenox7/stc/releases)
 
