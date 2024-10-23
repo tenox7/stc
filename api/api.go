@@ -44,7 +44,7 @@ type SysConnections struct {
 type SysStatus struct {
 	MyID   string `json:"myID"`
 	Uptime int64  `json:"uptime"`
-	Ram uint64 `json:"sys"`
+	Ram    uint64 `json:"sys"`
 }
 
 type SysVersion struct {
@@ -353,4 +353,20 @@ func Revert(folderID string) error {
 		return apiError(r.Status())
 	}
 	return nil
+}
+
+func Events(event_types string, limit int, since int) (string, error) {
+	r, err := c.R().
+		SetQueryString("events=" + event_types).
+		SetQueryString(fmt.Sprintf("since=%d", since)).
+		SetQueryString(fmt.Sprintf("limit=%d", limit)).
+		Get("events")
+	if err != nil {
+		return "", apiError(err)
+	}
+	if r.IsError() {
+		return "", apiError(r.Status())
+	}
+
+	return r.String(), nil
 }

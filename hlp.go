@@ -15,21 +15,23 @@ func usage() {
 	fmt.Fprintf(o, "stc [flags] [commands]\n\nflags:\n")
 	flag.PrintDefaults()
 	fmt.Fprintf(o, "\ncommands:\n"+
-		"  log           - print syncthing 'recent' log\n"+
-		"  restart       - restart syncthing daemon\n"+
-		"  shutdown      - shutdown syncthing daemon\n"+
-		"  errors        - print errors visible in web UI\n"+
-		"  clear_errors  - clear errors in the web UI\n"+
-		"  post_error    - posts a custom error message in the web UI\n"+
-		"  folder_errors - prints folder errors from scan or pull\n"+
-		"  folder_pause  - pause specified folder\n"+
-		"  folder_resume - unpause specified folder\n"+
-		"  id            - print ID of this node\n"+
-		"  reset_db      - reset the database / file index\n"+
-		"  rescan        - rescan a folder or 'all'\n"+
-		"  override      - override remote changed for a send-only folder (OoSync)\n"+
-		"  revert        - revert local changes for a receive-only folder (LocAdds)\n"+
-		"  json_dump     - prints a json object with device and folder info, for easier parsing in scripts\n",
+		"  log            - print syncthing 'recent' log\n"+
+		"  restart        - restart syncthing daemon\n"+
+		"  shutdown       - shutdown syncthing daemon\n"+
+		"  errors         - print errors visible in web UI\n"+
+		"  clear_errors   - clear errors in the web UI\n"+
+		"  post_error     - posts a custom error message in the web UI\n"+
+		"  folder_errors  - prints folder errors from scan or pull\n"+
+		"  folder_pause   - pause specified folder\n"+
+		"  folder_resume  - unpause specified folder\n"+
+		"  id             - print ID of this node\n"+
+		"  reset_db       - reset the database / file index\n"+
+		"  rescan         - rescan a folder or 'all'\n"+
+		"  override       - override remote changed for a send-only folder (OoSync)\n"+
+		"  revert         - revert local changes for a receive-only folder (LocAdds)\n"+
+		"  events [types] - prints a json list of latest events, [types] is a comma-delimited list of events\n"+
+		"                   see https://docs.syncthing.net/dev/events.html#event-types for a list of event types\n"+
+		"  json_dump      - prints a json object with device and folder info, for easier parsing in scripts\n",
 	)
 }
 
