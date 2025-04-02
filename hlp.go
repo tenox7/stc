@@ -57,13 +57,24 @@ func findCfgFile(homeDir string) (string, error) {
 		return getCfgFile(homeDir)
 	}
 
+	// try new default config dir (as of syncthing v1.29.3)
+	userHomeDir, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+	newStateDir := filepath.Join(userHomeDir, ".local", "state", "syncthing")
+	cfgFile, err := getCfgFile(newStateDir)
+	if err == nil {
+		return cfgFile, nil
+	}
+
 	// try user config dir
 	userCfgDir, err := os.UserConfigDir()
 	if err != nil {
 		return "", err
 	}
 	homeDir = filepath.Join(userCfgDir, "syncthing")
-	cfgFile, err := getCfgFile(homeDir)
+	cfgFile, err = getCfgFile(homeDir)
 	if err == nil {
 		return cfgFile, nil
 	}
