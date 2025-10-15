@@ -79,6 +79,28 @@ func findCfgFile(homeDir string) (string, error) {
 		return cfgFile, nil
 	}
 
+	//try appdata/local/syncthing (windows)
+	userCfgDir, err = os.UserCacheDir()
+	if err != nil {
+		return "", err
+	}
+	homeDir = filepath.Join(userCfgDir, "syncthing")
+	cfgFile, err = getCfgFile(homeDir)
+	if err == nil {
+		return cfgFile, nil
+	}
+
+	//try scoop dir (windows)
+	homeDir, err = os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+	newStateDir = filepath.Join(homeDir, "scoop", "persist", "syncthing", "config")
+	cfgFile, err = getCfgFile(newStateDir)
+	if err == nil {
+		return cfgFile, nil
+	}
+
 	// fall back to path of argv[0]
 	homeDir, err = os.Executable()
 	if err != nil {
