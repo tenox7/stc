@@ -15,7 +15,7 @@ cross:
 	GOOS=freebsd GOARCH=amd64 go build $(LDFLAGS) -a -o $(NAME)-amd64-freebsd .
 	GOOS=openbsd GOARCH=amd64 go build $(LDFLAGS) -a -o $(NAME)-amd64-openbsd .
 	GOOS=netbsd GOARCH=amd64 go build $(LDFLAGS) -a -o $(NAME)-amd64-netbsd .
-	GOOS=solaris GOARCH=amd64 go build $(LDFLAGS) -a -o $(NAME)-adm64-solaris .
+	GOOS=solaris GOARCH=amd64 go build $(LDFLAGS) -a -o $(NAME)-amd64-solaris .
 	GOOS=aix GOARCH=ppc64 go build $(LDFLAGS) -a -o $(NAME)-ppc64-aix .
 	GOOS=plan9 GOARCH=amd64 go build $(LDFLAGS) -a -o $(NAME)-amd64-plan9 .
 	GOOS=plan9 GOARCH=arm go build $(LDFLAGS) -a -o $(NAME)-arm-plan9 .
